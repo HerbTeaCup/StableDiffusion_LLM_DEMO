@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/// <summary>
+/// ScritableObject로 변경 예정.
+/// 이미 참조되고 있는 부분이 많아서 당분간은 이대로 유지.
+/// </summary>
 public partial class Communication
 {
     public static SDURLS sDurls = new ();
