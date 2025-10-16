@@ -41,7 +41,7 @@ public class SDManager : MonoBehaviour, IAsyncElement
 
     public async Task Init()
     {
-        config = await GetRequestAsync<Config>(sDurls.optionAPI);
+        config = await GetRequestAsync<Config>(sDurls.optionAPI, Communication.StalbeDiffusionBasicHeader);
 
         if (GameManager.sdManager.config.samples_save == false || GameManager.sdManager.config.save_images_add_number == false)
         {

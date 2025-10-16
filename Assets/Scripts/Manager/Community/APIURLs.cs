@@ -10,8 +10,6 @@ using UnityEngine;
 public partial class Communication
 {
     public static SDURLS sDurls = new ();
-    public static OllamaURLS ollamaUrls = new();
-
 
     public class SDURLS
     {
@@ -30,12 +28,5 @@ public partial class Communication
         readonly public string schedulerAPI = BasicLocalAdress + "sdapi/v1/schedulers";
 
         readonly public string pingAPI = BasicLocalAdress + "internal/ping";
-    }
-
-    public class OllamaURLS
-    {
-        static readonly string BasicLocalAddress = "http://localhost:11434/api/";
-        readonly public string chatAPI = BasicLocalAddress + "chat";
-        readonly public string generateAPI = BasicLocalAddress + "generate";
     }
 }

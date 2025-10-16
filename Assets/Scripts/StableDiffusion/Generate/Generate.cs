@@ -12,7 +12,8 @@ public abstract class Generate : MonoBehaviour
 
     public async Task ModelListAsync()
     {
-        var result = await GetRequestAsync<SDmodel[]>(sDurls.sd_modelsAPI);
+        //TODO : 임시. 지금 에셋을 못만들어서 임시로 이렇게.
+        var result = await GetRequestAsync<SDmodel[]>(sDurls.sd_modelsAPI, Communication.StalbeDiffusionBasicHeader);
         GameManager.sdManager.checkpoints = result;
     }
 
@@ -36,7 +37,7 @@ public abstract class Generate : MonoBehaviour
         if (GameManager.sdManager.checkpoints == null)
             await ModelListAsync();
         if (GameManager.sdManager.config == null)
-            GameManager.sdManager.config = await GetRequestAsync<Config>(sDurls.optionAPI);
+            GameManager.sdManager.config = await GetRequestAsync<Config>(sDurls.optionAPI, Communication.StalbeDiffusionBasicHeader);
 
         ResponseParam.Txt2ImageOutBody json =
             await PostRequestAsync<RequestParams.Txt2ImageInBody, ResponseParam.Txt2ImageOutBody>(targetUrl, txt2ImageBody);
@@ -70,7 +71,11 @@ public abstract class Generate : MonoBehaviour
         if (GameManager.sdManager.checkpoints == null)
             await ModelListAsync();
         if (GameManager.sdManager.config == null)
-            GameManager.sdManager.config = await GetRequestAsync<Config>(sDurls.optionAPI);
+        {
+            HeaderSetting header = new HeaderSetting(HeaderPurpose.Accept, sDurls.nameHeader, sDurls.valueHeader);
+
+            GameManager.sdManager.config = await GetRequestAsync<Config>(sDurls.optionAPI, header);
+        }
 
         ResponseParam.Txt2ImageOutBody json =
             await PostRequestAsync<RequestParams.Txt2ImageInBody, ResponseParam.Txt2ImageOutBody>(targetUrl, GameManager.sdManager.txt2ImageBody);

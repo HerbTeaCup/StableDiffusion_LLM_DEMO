@@ -44,7 +44,7 @@ public abstract class BaseDropDown<TData> : MonoBehaviour, IDropDown
         //설정객체가 모종의 이유로 없다면
         if (GameManager.sdManager.config == null)
         {
-            GameManager.sdManager.config = await GetRequestAsync<Config>(sDurls.optionAPI);
+            GameManager.sdManager.config = await GetRequestAsync<Config>(sDurls.optionAPI, Communication.StalbeDiffusionBasicHeader);
         }
 
         if (_refreshing) return;
@@ -57,7 +57,7 @@ public abstract class BaseDropDown<TData> : MonoBehaviour, IDropDown
         try
         {
             //자식클래스에서 정의한 TData타입으로 역직렬화 반환
-            dataList = await GetRequestAsync<TData[]>(GetAPIUrl());
+            dataList = await GetRequestAsync<TData[]>(GetAPIUrl(), StalbeDiffusionBasicHeader);
         }
         catch(System.Exception e)
         {

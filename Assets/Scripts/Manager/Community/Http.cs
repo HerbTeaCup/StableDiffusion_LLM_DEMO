@@ -9,6 +9,9 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Runtime.CompilerServices;
 
+//TODO : HttpClient는 예전에는 StableDiffusion WebUI만을 상정하고 설계되었으나, 이제는 Gemini LLM도 통신을 담당하게 되었기에 리팩토링
+//헤더 설정이나 URL 설정등이 통신 대상에 따라 달라질 수 있으므로, 이를 반영할 수 있도록 수정 필요
+
 /// <summary>
 /// 통신을 담당하는 클래스. 통신할 URL과 통신할 수 있는 메소드를 제공합니다.
 /// 모든 서버와의 통신은 이 클래스를 통해 통신.
@@ -16,6 +19,9 @@ using System.Runtime.CompilerServices;
 public partial class Communication
 {
     static readonly HttpClient httpClient = new HttpClient();
+
+    static HeaderSetting stableDiffusionBasicHeader = new HeaderSetting(HeaderPurpose.Accept, "Accept", "application/json");
+    public static HeaderSetting StalbeDiffusionBasicHeader => stableDiffusionBasicHeader; //임시로 사용하는 것.
 
     /// <summary>
     /// StableDiffusion Webui가 통신할 준비가 되었는지, 아닌지 판단하는 단순한 메소드입니다.
@@ -46,7 +52,7 @@ public partial class Communication
     /// GET 요청을 비동기적으로 수행하고, 응답을 파싱해서 반환합니다.
     /// </summary>
     /// <typeparam name="T">반환 받을 타입을 명시합니다</typeparam>
-    public static async Task<T> GetRequestAsync<T>(string targetURL, [CallerMemberName] string caller = "")
+    public static async Task<T> GetRequestAsync<T>(string targetURL, HeaderSetting header, [CallerMemberName] string caller = "")
     {
         if (!Uri.IsWellFormedUriString(targetURL, UriKind.Absolute))
         {
@@ -58,7 +64,7 @@ public partial class Communication
             HttpResponseMessage response = null;
             try
             {
-                request.Headers.Add(sDurls.nameHeader, sDurls.valueHeader);
+                request.Headers.Add(header.name, header.value);
 
                 response = await httpClient.SendAsync(request);
                 response.EnsureSuccessStatusCode();

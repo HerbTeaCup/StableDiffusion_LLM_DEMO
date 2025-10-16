@@ -60,6 +60,6 @@ public class ProgressBar : MonoBehaviour
 
     async Task<SDsetting.SDProgress> GetProgressValue()
     {
-        return await Communication.GetRequestAsync<SDsetting.SDProgress>(Communication.sDurls.progressAPI);
+        return await Communication.GetRequestAsync<SDsetting.SDProgress>(Communication.sDurls.progressAPI, Communication.StalbeDiffusionBasicHeader);
     }
 }

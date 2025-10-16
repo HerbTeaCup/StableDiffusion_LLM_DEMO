@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
-//Success 오브젝트에 있어서 연결 성공시 초기화 클래스를 따로 둬야할 것 같음
+//TODO: Success 오브젝트에 있어서 연결 성공시 초기화 클래스를 따로 둬야할 것 같음
 //이 상태면 생명주기가 안맞아서 CanvasGroup의 알파값을 변경하거나 상호작용을 금지시켜서 눈가리고 아웅 해야함
-public class AsyncManager : MonoBehaviour
+public class AsyncManager : MonoBehaviour, IManager
 {
     public bool isloading = false; //Ping()이 실행 중인지 여부  
     public bool connected = false; //연결이 성공했는지
