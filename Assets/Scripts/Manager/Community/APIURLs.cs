@@ -19,7 +19,6 @@ public partial class Communication
         static readonly string BasicLocalAdress = "http://127.0.0.1:7860/";
         readonly public string progressAPI = BasicLocalAdress + "sdapi/v1/progress";
         readonly public string upscalerAPI = BasicLocalAdress + "sdapi/v1/upscalers";
-        readonly public string latentupscalerAPI = BasicLocalAdress + "sdapi/v1/latent-upscale-modes";
         readonly public string sd_modelsAPI = BasicLocalAdress + "sdapi/v1/sd-models";
         readonly public string lorasAPI = BasicLocalAdress + "sdapi/v1/loras";
         readonly public string optionAPI = BasicLocalAdress + "sdapi/v1/options";

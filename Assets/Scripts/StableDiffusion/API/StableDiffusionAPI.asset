@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c4c0782d6260834b8b5ba19e8efe0c6, type: 3}
+  m_Name: StableDiffusionAPI
+  m_EditorClassIdentifier: 
+  apiType: 1
+  headers:
+  - headerPurpose: 3
+    name: Accept
+    value: application/json
+  urls:
+  - purpose: 0
+    url: http://127.0.0.1:7860/
+    description: "StableDiffusion Webui\uC758 \uAE30\uBCF8 \uC8FC\uC18C"
+  - purpose: 1
+    url: http://127.0.0.1:7860/sdapi/v1/progress
+    description: "\uC9C4\uD589\uB3C4"
+  - purpose: 2
+    url: http://127.0.0.1:7860/sdapi/v1/upscalers
+    description: "\uBAA8\uB4E0 \uC5C5\uC2A4\uCF00\uC77C\uB7EC(RESRGAN\uD3EC\uD568)"
+  - purpose: 3
+    url: http://127.0.0.1:7860/sdapi/v1/sd-models
+    description: "CheckPoint \uC870\uD68C"
+  - purpose: 4
+    url: http://127.0.0.1:7860/sdapi/v1/loras
+    description: "\uB85C\uB77C \uC811\uADFC"
+  - purpose: 5
+    url: http://127.0.0.1:7860/sdapi/v1/options
+    description: "StableDiffuison \uC124\uC815"
+  - purpose: 6
+    url: http://127.0.0.1:7860/sdapi/v1/txt2img
+    description: "\uD14D\uC2A4\uD2B8 -> \uC774\uBBF8\uC9C0 \uC0DD\uC131 \uC694\uCCAD(Post)"
+  - purpose: 7
+    url: http://127.0.0.1:7860/sdapi/v1/samplers
+    description: "Eular a \uB4F1 \uC0D8\uD50C\uB7EC"
+  - purpose: 8
+    url: http://127.0.0.1:7860/sdapi/v1/schedulers
+    description: "CheckPoint \uC870\uD68C"
+  - purpose: 9
+    url: http://127.0.0.1:7860/internal/ping
+    description: "\uC5F0\uACB0\uC0C1\uD0DC \uD655\uC778"
