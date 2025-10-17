@@ -34,7 +34,7 @@ public class ScheduleDropDown : BaseDropDown<SDscheduler>, IAsyncElementWithPrio
 
     protected override string GetAPIUrl()
     {
-        return sDurls.schedulerAPI;
+        return urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Schedulers);
     }
     
     protected override string GetDisplayName(SDscheduler data)

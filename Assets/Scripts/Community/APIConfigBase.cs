@@ -81,7 +81,6 @@ public abstract class APIConfigBase<TEnum, TUrlSetting> : ScriptableObject where
         return default;
     }
 
-
     protected virtual void OnEnable()
     {
         if (apiType == APIType.none)
@@ -106,7 +105,7 @@ public abstract class APIConfigBase<TEnum, TUrlSetting> : ScriptableObject where
         }
     }
 
-    public virtual TUrlSetting GetUrl(TEnum purpose)
+    public virtual TUrlSetting GetUrlSetting(TEnum purpose)
     {
         if (purpose.Equals(default(TEnum)))
         {
@@ -116,6 +115,21 @@ public abstract class APIConfigBase<TEnum, TUrlSetting> : ScriptableObject where
         if (_urlCache.TryGetValue(purpose, out var urlSetting))
         {
             return urlSetting;
+        }
+        Debug.LogError($"{typeof(TEnum).Name} {purpose}에 해당하는 URL이 없습니다.");
+        throw new KeyNotFoundException();
+    }
+
+    public virtual string GetUrl(TEnum purpose)
+    {
+        if (purpose.Equals(default(TEnum)))
+        {
+            Debug.LogError("URLPurpose가 none으로 설정되어 있습니다. 올바른 URLPurpose를 선택해주세요.");
+            throw new NullReferenceException();
+        }
+        if (_urlCache.TryGetValue(purpose, out var urlSetting))
+        {
+            return urlSetting.url;
         }
         Debug.LogError($"{typeof(TEnum).Name} {purpose}에 해당하는 URL이 없습니다.");
         throw new KeyNotFoundException();

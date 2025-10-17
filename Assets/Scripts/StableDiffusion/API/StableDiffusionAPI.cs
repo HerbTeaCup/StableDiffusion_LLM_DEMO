@@ -19,13 +19,13 @@ public enum StableDiffusionRequestPurpose
 }
 
 [System.Serializable]
-public class StableDiffusionURLSetting : URLSetting<StableDiffusionRequestPurpose> { }
+public class URLSettingForStableDiffusion : URLSetting<StableDiffusionRequestPurpose> { }
 
 [CreateAssetMenu(fileName = "StableDiffusionAPI", menuName = "API/StableDiffusionAPI", order = 1)]
-public class StableDiffusionAPI : APIConfigBase<StableDiffusionRequestPurpose, StableDiffusionURLSetting>
+public class StableDiffusionAPI : APIConfigBase<StableDiffusionRequestPurpose, URLSettingForStableDiffusion>
 {
-    [SerializeField] List<StableDiffusionURLSetting> urls;
-    protected override List<StableDiffusionURLSetting> Urls => urls;
+    [SerializeField] List<URLSettingForStableDiffusion> urls;
+    protected override List<URLSettingForStableDiffusion> Urls => urls;
     protected override void OnEnable()
     {
         base.OnEnable();

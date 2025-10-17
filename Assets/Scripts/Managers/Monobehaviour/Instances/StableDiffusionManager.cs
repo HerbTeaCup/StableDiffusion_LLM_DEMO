@@ -34,6 +34,8 @@ public class SDManager : ManagerBase<SDManager>, IAsyncElement
     public Config config { get; set; } //유령객체 생성 방지 프로퍼티 선언
     public RequestParams.Txt2ImageInBody txt2ImageBody = new RequestParams.Txt2ImageInBody(); //재활용을 위한 txt2ImageBody 객체 생성
 
+    UrlManager _urlManager => ManagerResister.GetManager<UrlManager>();
+
     private void OnEnable()
     {
         ManagerResister.GetManager<AsyncManager>().asyncElements.Add(this);
@@ -41,14 +43,14 @@ public class SDManager : ManagerBase<SDManager>, IAsyncElement
 
     public async Task Init()
     {
-        config = await GetRequestAsync<Config>(sDurls.optionAPI, Communication.StalbeDiffusionBasicHeader);
+        config = await GetRequestAsync<Config>(_urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Options), Communication.StalbeDiffusionBasicHeader);
 
-        if (ManagerResister.GetManager<SDManager>().config.samples_save == false || ManagerResister.GetManager<SDManager>().config.save_images_add_number == false)
+        if (this.config.samples_save == false || ManagerResister.GetManager<SDManager>().config.save_images_add_number == false)
         {
-            ManagerResister.GetManager<SDManager>().config.samples_save = true;
-            ManagerResister.GetManager<SDManager>().config.save_images_add_number = true;
+            this.config.samples_save = true;
+            this.config.save_images_add_number = true;
             //ManagerResister.GetManager<SDManager>().config.outdir_img2img_samples
-            await PostRequestAsync<Config>(sDurls.optionAPI, ManagerResister.GetManager<SDManager>().config);
+            await PostRequestAsync<Config>(_urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Options), this.config);
         }
     }
 }

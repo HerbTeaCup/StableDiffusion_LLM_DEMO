@@ -14892,6 +14892,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1357653740}
+  - component: {fileID: 1357653741}
   m_Layer: 0
   m_Name: '@UrlManager'
   m_TagString: Untagged
@@ -14914,6 +14915,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 195061617}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1357653741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1357653739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf179eab277c581449c40fc4e786ee75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gemini: {fileID: 11400000, guid: 2ec78b4667aa4974087d8888857c7af7, type: 2}
+  stableDiffusion: {fileID: 11400000, guid: 82f1247cfd276ac4bac882b0cbe64516, type: 2}
 --- !u!1 &1359649956
 GameObject:
   m_ObjectHideFlags: 0

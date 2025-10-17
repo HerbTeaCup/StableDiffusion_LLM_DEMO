@@ -24,7 +24,7 @@ public class SamplerDropDown : BaseDropDown<SDsampler>, IAsyncElementWithPriorit
 
     protected override string GetAPIUrl()
     {
-        return sDurls.samplerAPI;
+        return urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Samplers);
     }
 
     protected override string GetDisplayName(SDsampler data)

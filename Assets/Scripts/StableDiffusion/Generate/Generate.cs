@@ -10,10 +10,13 @@ public abstract class Generate : MonoBehaviour
 {
     public static bool generating = false;
 
+    protected UrlManager urlManager => ManagerResister.GetManager<UrlManager>();
+
     public async Task ModelListAsync()
     {
         //TODO : 임시. 지금 에셋을 못만들어서 임시로 이렇게.
-        var result = await GetRequestAsync<SDmodel[]>(sDurls.sd_modelsAPI, Communication.StalbeDiffusionBasicHeader);
+        var result = await GetRequestAsync<SDmodel[]>
+            (urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.SDModels), Communication.StalbeDiffusionBasicHeader);
         ManagerResister.GetManager<SDManager>().checkpoints = result;
     }
 
@@ -31,13 +34,14 @@ public abstract class Generate : MonoBehaviour
             return null;
         }
 
-        string targetUrl = sDurls.txt2ImageAPI;
+        string targetUrl = urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Txt2Img);
         generating = true;
 
         if (ManagerResister.GetManager<SDManager>().checkpoints == null)
             await ModelListAsync();
         if (ManagerResister.GetManager<SDManager>().config == null)
-            ManagerResister.GetManager<SDManager>().config = await GetRequestAsync<Config>(sDurls.optionAPI, Communication.StalbeDiffusionBasicHeader);
+            ManagerResister.GetManager<SDManager>().config 
+                = await GetRequestAsync<Config>(urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Options), Communication.StalbeDiffusionBasicHeader);
 
         ResponseParam.Txt2ImageOutBody json =
             await PostRequestAsync<RequestParams.Txt2ImageInBody, ResponseParam.Txt2ImageOutBody>(targetUrl, txt2ImageBody);
@@ -65,16 +69,17 @@ public abstract class Generate : MonoBehaviour
             return null;
         }
 
-        string targetUrl = sDurls.txt2ImageAPI;
+        string targetUrl = urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Txt2Img);
         generating = true;
 
         if (ManagerResister.GetManager<SDManager>().checkpoints == null)
             await ModelListAsync();
         if (ManagerResister.GetManager<SDManager>().config == null)
         {
-            HeaderSetting header = new HeaderSetting(HeaderPurpose.Accept, sDurls.nameHeader, sDurls.valueHeader);
+            HeaderSetting header = urlManager.StableDiffusion.GetHeader(HeaderPurpose.Accept);
 
-            ManagerResister.GetManager<SDManager>().config = await GetRequestAsync<Config>(sDurls.optionAPI, header);
+            ManagerResister.GetManager<SDManager>().config 
+                = await GetRequestAsync<Config>(urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Options), header);
         }
 
         ResponseParam.Txt2ImageOutBody json =

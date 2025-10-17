@@ -9,9 +9,6 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Runtime.CompilerServices;
 
-//TODO : HttpClient는 예전에는 StableDiffusion WebUI만을 상정하고 설계되었으나, 이제는 Gemini LLM도 통신을 담당하게 되었기에 리팩토링
-//헤더 설정이나 URL 설정등이 통신 대상에 따라 달라질 수 있으므로, 이를 반영할 수 있도록 수정 필요
-
 /// <summary>
 /// 통신을 담당하는 클래스. 통신할 URL과 통신할 수 있는 메소드를 제공합니다.
 /// 모든 서버와의 통신은 이 클래스를 통해 통신.
@@ -20,15 +17,18 @@ public partial class Communication
 {
     static readonly HttpClient httpClient = new HttpClient();
 
+    //TODO:해당 참조 전부 없애고 APIConfigBase의 헤더로 교체
     static HeaderSetting stableDiffusionBasicHeader = new HeaderSetting(HeaderPurpose.Accept, "Accept", "application/json");
     public static HeaderSetting StalbeDiffusionBasicHeader => stableDiffusionBasicHeader; //임시로 사용하는 것.
+
+    static UrlManager _urlManager => ManagerResister.GetManager<UrlManager>();
 
     /// <summary>
     /// StableDiffusion Webui가 통신할 준비가 되었는지, 아닌지 판단하는 단순한 메소드입니다.
     /// </summary>
     public static async Task<bool> ConnectingCheck()
     {
-        var request = new HttpRequestMessage(HttpMethod.Get, sDurls.pingAPI);
+        var request = new HttpRequestMessage(HttpMethod.Get, _urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Ping));
         HttpResponseMessage response = null;
 
         try
@@ -122,10 +122,11 @@ public partial class Communication
             HttpResponseMessage response = null;
             try
             {
-                request.Headers.Add(sDurls.nameHeader, sDurls.valueHeader);
+                HeaderSetting setting = _urlManager.StableDiffusion.GetHeader(HeaderPurpose.Accept);
+                request.Headers.Add(setting.name, setting.value);
                 string requestBody = JsonConvert.SerializeObject(postData);//post할 데이터를 문자열로 변환
 
-                request.Content = new StringContent(requestBody, Encoding.UTF8, sDurls.valueHeader);
+                request.Content = new StringContent(requestBody, Encoding.UTF8, setting.value);
 
                 response = await httpClient.SendAsync(request);
                 response.EnsureSuccessStatusCode();
@@ -177,10 +178,11 @@ public partial class Communication
 
             try
             {
-                request.Headers.Add(sDurls.nameHeader, sDurls.valueHeader);
+                HeaderSetting setting = _urlManager.StableDiffusion.GetHeader(HeaderPurpose.Accept);
+                request.Headers.Add(setting.name, setting.value);
                 string requestBody = JsonConvert.SerializeObject(postData);//post할 데이터를 문자열로 변환
 
-                request.Content = new StringContent(requestBody, Encoding.UTF8, sDurls.valueHeader);
+                request.Content = new StringContent(requestBody, Encoding.UTF8, setting.value);
 
                 response = await httpClient.SendAsync(request);
                 response.EnsureSuccessStatusCode();

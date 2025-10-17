@@ -20,6 +20,8 @@ public abstract class BaseDropDown<TData> : MonoBehaviour, IDropDown
     protected bool _refreshing = false;
     [SerializeField] protected byte subStringLength = 24;
 
+    protected UrlManager urlManager => ManagerResister.GetManager<UrlManager>();
+
     /// <summary>
     /// API 호출 URL을 반환합니다.
     /// </summary>
@@ -44,7 +46,8 @@ public abstract class BaseDropDown<TData> : MonoBehaviour, IDropDown
         //설정객체가 모종의 이유로 없다면
         if (ManagerResister.GetManager<SDManager>().config == null)
         {
-            ManagerResister.GetManager<SDManager>().config = await GetRequestAsync<Config>(sDurls.optionAPI, Communication.StalbeDiffusionBasicHeader);
+            ManagerResister.GetManager<SDManager>().config 
+                = await GetRequestAsync<Config>(urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Options), Communication.StalbeDiffusionBasicHeader);
         }
 
         if (_refreshing) return;

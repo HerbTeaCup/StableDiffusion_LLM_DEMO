@@ -15,7 +15,7 @@ public class UpscalerDropDown : BaseDropDown<UpscalerModel>
 
     protected override string GetAPIUrl()
     {
-        return sDurls.upscalerAPI;
+        return urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Upscaler);
     }
 
     protected override string GetDisplayName(UpscalerModel data)

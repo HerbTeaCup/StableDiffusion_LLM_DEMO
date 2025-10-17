@@ -23,7 +23,7 @@ public class ModelDropDown : BaseDropDown<SDmodel>
 
         ManagerResister.GetManager<SDManager>().config.sd_model_checkpoint = ManagerResister.GetManager<SDManager>().checkpoints[index].model_name;//荐沥窍绊
 
-        await Communication.PostRequestAsync<Config>(Communication.sDurls.optionAPI, ManagerResister.GetManager<SDManager>().config);//WebUI Config客 鞍霸(老包己)
+        await Communication.PostRequestAsync<Config>(urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Options), ManagerResister.GetManager<SDManager>().config);//WebUI Config客 鞍霸(老包己)
 
         Debug.Log($"Select Model: {ManagerResister.GetManager<SDManager>().config.sd_model_checkpoint}");
 
@@ -32,7 +32,7 @@ public class ModelDropDown : BaseDropDown<SDmodel>
 
     protected override string GetAPIUrl()
     {
-        return Communication.sDurls.sd_modelsAPI;
+        return urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.SDModels);
     }
 
     protected override string GetDisplayName(SDmodel data)
