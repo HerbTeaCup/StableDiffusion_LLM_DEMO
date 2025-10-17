@@ -8,7 +8,7 @@ public class ScheduleDropDown : BaseDropDown<SDscheduler>, IAsyncElementWithPrio
 
     protected override void OnEnable()
     {
-        AsyncManager.Instance.dependentAsyncs.Add(this);
+        ManagerResister.GetManager<AsyncManager>().dependentAsyncs.Add(this);
     }
 
     /// <summary>
@@ -16,19 +16,19 @@ public class ScheduleDropDown : BaseDropDown<SDscheduler>, IAsyncElementWithPrio
     /// </summary>
     public override void OnValueChanged(int index)
     {
-        SDManager.Instance.SchedulerModelIndex = index;
+        ManagerResister.GetManager<SDManager>().SchedulerModelIndex = index;
 
         //automatic일 경우 sampler에 맞게 scheduler를 변경
-        if (SDManager.Instance.schedulerModels[SDManager.Instance.SchedulerModelIndex].label == "Automatic"
-            || SDManager.Instance.schedulerModels[SDManager.Instance.SchedulerModelIndex].name == "automatic")
+        if (ManagerResister.GetManager<SDManager>().schedulerModels[ManagerResister.GetManager<SDManager>().SchedulerModelIndex].label == "Automatic"
+            || ManagerResister.GetManager<SDManager>().schedulerModels[ManagerResister.GetManager<SDManager>().SchedulerModelIndex].name == "automatic")
         {
-            SDManager.Instance.txt2ImageBody.scheduler =
-                SDManager.Instance.samplerModels[SDManager.Instance.SamplerModelIndex].options.scheduler;
+            ManagerResister.GetManager<SDManager>().txt2ImageBody.scheduler =
+                ManagerResister.GetManager<SDManager>().samplerModels[ManagerResister.GetManager<SDManager>().SamplerModelIndex].options.scheduler;
         }
         else //아니라면 지정한 스케쥴러로
         {
-            SDManager.Instance.txt2ImageBody.scheduler =
-                SDManager.Instance.schedulerModels[SDManager.Instance.SchedulerModelIndex].name;
+            ManagerResister.GetManager<SDManager>().txt2ImageBody.scheduler =
+                ManagerResister.GetManager<SDManager>().schedulerModels[ManagerResister.GetManager<SDManager>().SchedulerModelIndex].name;
         }
     }
 
@@ -44,10 +44,10 @@ public class ScheduleDropDown : BaseDropDown<SDscheduler>, IAsyncElementWithPrio
 
     protected override void OnDataApplied(SDscheduler[] data)
     {
-        SDManager.Instance.schedulerModels = data;
-        SDManager.Instance.SchedulerModelIndex = 0;
+        ManagerResister.GetManager<SDManager>().schedulerModels = data;
+        ManagerResister.GetManager<SDManager>().SchedulerModelIndex = 0;
 
-        SDManager.Instance.txt2ImageBody.scheduler =
-            SDManager.Instance.schedulerModels[SDManager.Instance.SchedulerModelIndex].name;
+        ManagerResister.GetManager<SDManager>().txt2ImageBody.scheduler =
+            ManagerResister.GetManager<SDManager>().schedulerModels[ManagerResister.GetManager<SDManager>().SchedulerModelIndex].name;
     }
 }

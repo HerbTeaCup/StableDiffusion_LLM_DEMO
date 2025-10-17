@@ -21,16 +21,16 @@ public class GerateImage : Generate
     public void OnEndEditPropmt(string input)
     {
         //단순히 프로폼트만 수정할 것임.
-        SDManager.Instance.txt2ImageBody.prompt = input;
+        ManagerResister.GetManager<SDManager>().txt2ImageBody.prompt = input;
     }
     public void OnEndEditNegativePropmt(string input)
     {
         //단순히 프로폼트만 수정할 것임.
-        SDManager.Instance.txt2ImageBody.negative_prompt = input;
+        ManagerResister.GetManager<SDManager>().txt2ImageBody.negative_prompt = input;
     }
     public void OnClick()
     {
-        if (AsyncManager.Instance.connected == false)
+        if (ManagerResister.GetManager<AsyncManager>().connected == false)
         {
             Debug.LogError("Disconnected from WebUI...");
             return;
@@ -87,7 +87,7 @@ public class GerateImage : Generate
             $"CFG scale: {response.parameters.cfg_scale}, " +
             $"Seed: {response.parameters.seed}, " +
             $"Size: {texture.width}x{texture.height}, " +
-            $"Model: {SDManager.Instance.config.sd_model_checkpoint?.ToString() ?? "Unknown"}\n" +
+            $"Model: {ManagerResister.GetManager<SDManager>().config.sd_model_checkpoint?.ToString() ?? "Unknown"}\n" +
             $"Denoising strength: {response.parameters.denoising_strength}, ";
         if (response.parameters.enable_hr)
         {

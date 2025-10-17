@@ -21,10 +21,10 @@ public class Propmt : MonoBehaviour
         switch (promptType)
         {
             case PromptType.prompt:
-                SDManager.Instance.txt2ImageBody.prompt = inputField.text;
+                ManagerResister.GetManager<SDManager>().txt2ImageBody.prompt = inputField.text;
                 break;
             case PromptType.negative:
-                SDManager.Instance.txt2ImageBody.negative_prompt = inputField.text;
+                ManagerResister.GetManager<SDManager>().txt2ImageBody.negative_prompt = inputField.text;
                 break;
             default:
                 Debug.LogWarning("PromptType is not set");

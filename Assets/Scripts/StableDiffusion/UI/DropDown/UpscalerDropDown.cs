@@ -7,10 +7,10 @@ public class UpscalerDropDown : BaseDropDown<UpscalerModel>
     //DropDown 변경시 인덱스 값 변경
     public override void OnValueChanged(int index)
     {
-        SDManager.Instance.txt2ImageBody.hr_upscaler =
-            SDManager.Instance.upscalerModels[index].name;
+        ManagerResister.GetManager<SDManager>().txt2ImageBody.hr_upscaler =
+            ManagerResister.GetManager<SDManager>().upscalerModels[index].name;
 
-        SDManager.Instance.UpscalerModelIndex = index;
+        ManagerResister.GetManager<SDManager>().UpscalerModelIndex = index;
     }
 
     protected override string GetAPIUrl()
@@ -25,10 +25,10 @@ public class UpscalerDropDown : BaseDropDown<UpscalerModel>
 
     protected override void OnDataApplied(UpscalerModel[] data)
     {
-        SDManager.Instance.upscalerModels = data;
-        SDManager.Instance.UpscalerModelIndex = 0;
+        ManagerResister.GetManager<SDManager>().upscalerModels = data;
+        ManagerResister.GetManager<SDManager>().UpscalerModelIndex = 0;
 
-        SDManager.Instance.txt2ImageBody.hr_upscaler =
-            SDManager.Instance.upscalerModels[SDManager.Instance.UpscalerModelIndex].name;
+        ManagerResister.GetManager<SDManager>().txt2ImageBody.hr_upscaler =
+            ManagerResister.GetManager<SDManager>().upscalerModels[ManagerResister.GetManager<SDManager>().UpscalerModelIndex].name;
     }
 }

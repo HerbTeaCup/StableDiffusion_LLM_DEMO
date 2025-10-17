@@ -17,7 +17,7 @@ public class ShowInit : MonoBehaviour
     private void Update()
     {
         //로딩 중일 때
-        if (AsyncManager.Instance.isloading)
+        if (ManagerResister.GetManager<AsyncManager>().isloading)
         {
             Show(_loading);
             Hide(_success);
@@ -27,7 +27,7 @@ public class ShowInit : MonoBehaviour
 
         //로딩이 끝났을 때
         Hide(_loading);
-        if (AsyncManager.Instance.connected == false)
+        if (ManagerResister.GetManager<AsyncManager>().connected == false)
         {
             Hide(_success);
             Show(_fail);

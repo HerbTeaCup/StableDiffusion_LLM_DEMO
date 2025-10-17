@@ -14,7 +14,7 @@ public abstract class Generate : MonoBehaviour
     {
         //TODO : 임시. 지금 에셋을 못만들어서 임시로 이렇게.
         var result = await GetRequestAsync<SDmodel[]>(sDurls.sd_modelsAPI, Communication.StalbeDiffusionBasicHeader);
-        SDManager.Instance.checkpoints = result;
+        ManagerResister.GetManager<SDManager>().checkpoints = result;
     }
 
     //img2img는 만약 구현한다면 오버로딩할 거임
@@ -34,10 +34,10 @@ public abstract class Generate : MonoBehaviour
         string targetUrl = sDurls.txt2ImageAPI;
         generating = true;
 
-        if (SDManager.Instance.checkpoints == null)
+        if (ManagerResister.GetManager<SDManager>().checkpoints == null)
             await ModelListAsync();
-        if (SDManager.Instance.config == null)
-            SDManager.Instance.config = await GetRequestAsync<Config>(sDurls.optionAPI, Communication.StalbeDiffusionBasicHeader);
+        if (ManagerResister.GetManager<SDManager>().config == null)
+            ManagerResister.GetManager<SDManager>().config = await GetRequestAsync<Config>(sDurls.optionAPI, Communication.StalbeDiffusionBasicHeader);
 
         ResponseParam.Txt2ImageOutBody json =
             await PostRequestAsync<RequestParams.Txt2ImageInBody, ResponseParam.Txt2ImageOutBody>(targetUrl, txt2ImageBody);
@@ -68,17 +68,17 @@ public abstract class Generate : MonoBehaviour
         string targetUrl = sDurls.txt2ImageAPI;
         generating = true;
 
-        if (SDManager.Instance.checkpoints == null)
+        if (ManagerResister.GetManager<SDManager>().checkpoints == null)
             await ModelListAsync();
-        if (SDManager.Instance.config == null)
+        if (ManagerResister.GetManager<SDManager>().config == null)
         {
             HeaderSetting header = new HeaderSetting(HeaderPurpose.Accept, sDurls.nameHeader, sDurls.valueHeader);
 
-            SDManager.Instance.config = await GetRequestAsync<Config>(sDurls.optionAPI, header);
+            ManagerResister.GetManager<SDManager>().config = await GetRequestAsync<Config>(sDurls.optionAPI, header);
         }
 
         ResponseParam.Txt2ImageOutBody json =
-            await PostRequestAsync<RequestParams.Txt2ImageInBody, ResponseParam.Txt2ImageOutBody>(targetUrl, SDManager.Instance.txt2ImageBody);
+            await PostRequestAsync<RequestParams.Txt2ImageInBody, ResponseParam.Txt2ImageOutBody>(targetUrl, ManagerResister.GetManager<SDManager>().txt2ImageBody);
 
         if (json == null || json.images == null)
         {

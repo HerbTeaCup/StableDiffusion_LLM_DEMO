@@ -8,7 +8,7 @@ public class SamplerDropDown : BaseDropDown<SDsampler>, IAsyncElementWithPriorit
 
     protected override void OnEnable()
     {
-        AsyncManager.Instance.dependentAsyncs.Add(this);
+        ManagerResister.GetManager<AsyncManager>().dependentAsyncs.Add(this);
     }
 
     /// <summary>
@@ -16,10 +16,10 @@ public class SamplerDropDown : BaseDropDown<SDsampler>, IAsyncElementWithPriorit
     /// </summary>
     public override void OnValueChanged(int index)
     {
-        SDManager.Instance.txt2ImageBody.sampler_name =
-            SDManager.Instance.samplerModels[index].name;
+        ManagerResister.GetManager<SDManager>().txt2ImageBody.sampler_name =
+            ManagerResister.GetManager<SDManager>().samplerModels[index].name;
 
-        SDManager.Instance.SamplerModelIndex = index;
+        ManagerResister.GetManager<SDManager>().SamplerModelIndex = index;
     }
 
     protected override string GetAPIUrl()
@@ -34,10 +34,10 @@ public class SamplerDropDown : BaseDropDown<SDsampler>, IAsyncElementWithPriorit
 
     protected override void OnDataApplied(SDsampler[] data)
     {
-        SDManager.Instance.samplerModels = data;
-        SDManager.Instance.SamplerModelIndex = 0;
+        ManagerResister.GetManager<SDManager>().samplerModels = data;
+        ManagerResister.GetManager<SDManager>().SamplerModelIndex = 0;
 
-        SDManager.Instance.txt2ImageBody.sampler_name =
-            SDManager.Instance.samplerModels[SDManager.Instance.SamplerModelIndex].name;
+        ManagerResister.GetManager<SDManager>().txt2ImageBody.sampler_name =
+            ManagerResister.GetManager<SDManager>().samplerModels[ManagerResister.GetManager<SDManager>().SamplerModelIndex].name;
     }
 }

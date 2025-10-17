@@ -8,7 +8,7 @@ public class HightSlider : BaseSlider
     public override void OnValueChanged(float value)
     {
         int realValue = (int)System.Math.Round(value);
-        SDManager.Instance.txt2ImageBody.height = realValue;
+        ManagerResister.GetManager<SDManager>().txt2ImageBody.height = realValue;
 
         if (!inputField.isFocused)
         {

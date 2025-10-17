@@ -17,15 +17,15 @@ public class ModelDropDown : BaseDropDown<SDmodel>
     /// </summary>
     public override async void OnValueChanged(int index)
     {
-        SDManager.Instance.CheckpointIndex = index;
+        ManagerResister.GetManager<SDManager>().CheckpointIndex = index;
 
         dropdown.interactable = false;
 
-        SDManager.Instance.config.sd_model_checkpoint = SDManager.Instance.checkpoints[index].model_name;//수정하고
+        ManagerResister.GetManager<SDManager>().config.sd_model_checkpoint = ManagerResister.GetManager<SDManager>().checkpoints[index].model_name;//수정하고
 
-        await Communication.PostRequestAsync<Config>(Communication.sDurls.optionAPI, SDManager.Instance.config);//WebUI Config와 같게(일관성)
+        await Communication.PostRequestAsync<Config>(Communication.sDurls.optionAPI, ManagerResister.GetManager<SDManager>().config);//WebUI Config와 같게(일관성)
 
-        Debug.Log($"Select Model: {SDManager.Instance.config.sd_model_checkpoint}");
+        Debug.Log($"Select Model: {ManagerResister.GetManager<SDManager>().config.sd_model_checkpoint}");
 
         dropdown.interactable = true;
     }
@@ -44,15 +44,15 @@ public class ModelDropDown : BaseDropDown<SDmodel>
     {
         dropdown.onValueChanged.RemoveAllListeners();
 
-        SDManager.Instance.checkpoints = data;
+        ManagerResister.GetManager<SDManager>().checkpoints = data;
 
-        for (int i = 0; i < SDManager.Instance.checkpoints.Length; i++)
+        for (int i = 0; i < ManagerResister.GetManager<SDManager>().checkpoints.Length; i++)
         {
-            if (SDManager.Instance.checkpoints[i].model_name == SDManager.Instance.config.sd_model_checkpoint ||
-                SDManager.Instance.checkpoints[i].title == SDManager.Instance.config.sd_model_checkpoint)
+            if (ManagerResister.GetManager<SDManager>().checkpoints[i].model_name == ManagerResister.GetManager<SDManager>().config.sd_model_checkpoint ||
+                ManagerResister.GetManager<SDManager>().checkpoints[i].title == ManagerResister.GetManager<SDManager>().config.sd_model_checkpoint)
             {
                 dropdown.value = i;
-                SDManager.Instance.CheckpointIndex = i;
+                ManagerResister.GetManager<SDManager>().CheckpointIndex = i;
                 break;
             }
         }

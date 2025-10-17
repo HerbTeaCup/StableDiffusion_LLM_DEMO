@@ -10,7 +10,7 @@ using static SDsetting;
 using static Communication;
 using System.Threading.Tasks;
 
-public class SDManager : SingletonManager<SDManager>, IAsyncElement
+public class SDManager : ManagerBase<SDManager>, IAsyncElement
 {
     //SD Model
     public SDmodel[] checkpoints;
@@ -36,19 +36,19 @@ public class SDManager : SingletonManager<SDManager>, IAsyncElement
 
     private void OnEnable()
     {
-        AsyncManager.Instance.asyncElements.Add(this);
+        ManagerResister.GetManager<AsyncManager>().asyncElements.Add(this);
     }
 
     public async Task Init()
     {
         config = await GetRequestAsync<Config>(sDurls.optionAPI, Communication.StalbeDiffusionBasicHeader);
 
-        if (SDManager.Instance.config.samples_save == false || SDManager.Instance.config.save_images_add_number == false)
+        if (ManagerResister.GetManager<SDManager>().config.samples_save == false || ManagerResister.GetManager<SDManager>().config.save_images_add_number == false)
         {
-            SDManager.Instance.config.samples_save = true;
-            SDManager.Instance.config.save_images_add_number = true;
-            //SDManager.Instance.config.outdir_img2img_samples
-            await PostRequestAsync<Config>(sDurls.optionAPI, SDManager.Instance.config);
+            ManagerResister.GetManager<SDManager>().config.samples_save = true;
+            ManagerResister.GetManager<SDManager>().config.save_images_add_number = true;
+            //ManagerResister.GetManager<SDManager>().config.outdir_img2img_samples
+            await PostRequestAsync<Config>(sDurls.optionAPI, ManagerResister.GetManager<SDManager>().config);
         }
     }
 }
