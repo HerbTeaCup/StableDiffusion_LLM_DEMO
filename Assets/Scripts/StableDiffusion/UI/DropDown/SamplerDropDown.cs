@@ -8,7 +8,7 @@ public class SamplerDropDown : BaseDropDown<SDsampler>, IAsyncElementWithPriorit
 
     protected override void OnEnable()
     {
-        GameManager.asyncManager.dependentAsyncs.Add(this);
+        AsyncManager.Instance.dependentAsyncs.Add(this);
     }
 
     /// <summary>
@@ -16,10 +16,10 @@ public class SamplerDropDown : BaseDropDown<SDsampler>, IAsyncElementWithPriorit
     /// </summary>
     public override void OnValueChanged(int index)
     {
-        GameManager.sdManager.txt2ImageBody.sampler_name =
-            GameManager.sdManager.samplerModels[index].name;
+        SDManager.Instance.txt2ImageBody.sampler_name =
+            SDManager.Instance.samplerModels[index].name;
 
-        GameManager.sdManager.SamplerModelIndex = index;
+        SDManager.Instance.SamplerModelIndex = index;
     }
 
     protected override string GetAPIUrl()
@@ -34,10 +34,10 @@ public class SamplerDropDown : BaseDropDown<SDsampler>, IAsyncElementWithPriorit
 
     protected override void OnDataApplied(SDsampler[] data)
     {
-        GameManager.sdManager.samplerModels = data;
-        GameManager.sdManager.SamplerModelIndex = 0;
+        SDManager.Instance.samplerModels = data;
+        SDManager.Instance.SamplerModelIndex = 0;
 
-        GameManager.sdManager.txt2ImageBody.sampler_name =
-            GameManager.sdManager.samplerModels[GameManager.sdManager.SamplerModelIndex].name;
+        SDManager.Instance.txt2ImageBody.sampler_name =
+            SDManager.Instance.samplerModels[SDManager.Instance.SamplerModelIndex].name;
     }
 }

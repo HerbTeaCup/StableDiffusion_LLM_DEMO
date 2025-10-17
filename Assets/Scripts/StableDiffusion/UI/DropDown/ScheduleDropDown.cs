@@ -8,7 +8,7 @@ public class ScheduleDropDown : BaseDropDown<SDscheduler>, IAsyncElementWithPrio
 
     protected override void OnEnable()
     {
-        GameManager.asyncManager.dependentAsyncs.Add(this);
+        AsyncManager.Instance.dependentAsyncs.Add(this);
     }
 
     /// <summary>
@@ -16,19 +16,19 @@ public class ScheduleDropDown : BaseDropDown<SDscheduler>, IAsyncElementWithPrio
     /// </summary>
     public override void OnValueChanged(int index)
     {
-        GameManager.sdManager.SchedulerModelIndex = index;
+        SDManager.Instance.SchedulerModelIndex = index;
 
         //automatic일 경우 sampler에 맞게 scheduler를 변경
-        if (GameManager.sdManager.schedulerModels[GameManager.sdManager.SchedulerModelIndex].label == "Automatic"
-            || GameManager.sdManager.schedulerModels[GameManager.sdManager.SchedulerModelIndex].name == "automatic")
+        if (SDManager.Instance.schedulerModels[SDManager.Instance.SchedulerModelIndex].label == "Automatic"
+            || SDManager.Instance.schedulerModels[SDManager.Instance.SchedulerModelIndex].name == "automatic")
         {
-            GameManager.sdManager.txt2ImageBody.scheduler =
-                GameManager.sdManager.samplerModels[GameManager.sdManager.SamplerModelIndex].options.scheduler;
+            SDManager.Instance.txt2ImageBody.scheduler =
+                SDManager.Instance.samplerModels[SDManager.Instance.SamplerModelIndex].options.scheduler;
         }
         else //아니라면 지정한 스케쥴러로
         {
-            GameManager.sdManager.txt2ImageBody.scheduler =
-                GameManager.sdManager.schedulerModels[GameManager.sdManager.SchedulerModelIndex].name;
+            SDManager.Instance.txt2ImageBody.scheduler =
+                SDManager.Instance.schedulerModels[SDManager.Instance.SchedulerModelIndex].name;
         }
     }
 
@@ -44,10 +44,10 @@ public class ScheduleDropDown : BaseDropDown<SDscheduler>, IAsyncElementWithPrio
 
     protected override void OnDataApplied(SDscheduler[] data)
     {
-        GameManager.sdManager.schedulerModels = data;
-        GameManager.sdManager.SchedulerModelIndex = 0;
+        SDManager.Instance.schedulerModels = data;
+        SDManager.Instance.SchedulerModelIndex = 0;
 
-        GameManager.sdManager.txt2ImageBody.scheduler =
-            GameManager.sdManager.schedulerModels[GameManager.sdManager.SchedulerModelIndex].name;
+        SDManager.Instance.txt2ImageBody.scheduler =
+            SDManager.Instance.schedulerModels[SDManager.Instance.SchedulerModelIndex].name;
     }
 }

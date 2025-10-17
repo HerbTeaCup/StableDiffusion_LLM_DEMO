@@ -17,15 +17,15 @@ public class ModelDropDown : BaseDropDown<SDmodel>
     /// </summary>
     public override async void OnValueChanged(int index)
     {
-        GameManager.sdManager.CheckpointIndex = index;
+        SDManager.Instance.CheckpointIndex = index;
 
         dropdown.interactable = false;
 
-        GameManager.sdManager.config.sd_model_checkpoint = GameManager.sdManager.checkpoints[index].model_name;//수정하고
+        SDManager.Instance.config.sd_model_checkpoint = SDManager.Instance.checkpoints[index].model_name;//수정하고
 
-        await Communication.PostRequestAsync<Config>(Communication.sDurls.optionAPI, GameManager.sdManager.config);//WebUI Config와 같게(일관성)
+        await Communication.PostRequestAsync<Config>(Communication.sDurls.optionAPI, SDManager.Instance.config);//WebUI Config와 같게(일관성)
 
-        Debug.Log($"Select Model: {GameManager.sdManager.config.sd_model_checkpoint}");
+        Debug.Log($"Select Model: {SDManager.Instance.config.sd_model_checkpoint}");
 
         dropdown.interactable = true;
     }
@@ -44,15 +44,15 @@ public class ModelDropDown : BaseDropDown<SDmodel>
     {
         dropdown.onValueChanged.RemoveAllListeners();
 
-        GameManager.sdManager.checkpoints = data;
+        SDManager.Instance.checkpoints = data;
 
-        for (int i = 0; i < GameManager.sdManager.checkpoints.Length; i++)
+        for (int i = 0; i < SDManager.Instance.checkpoints.Length; i++)
         {
-            if (GameManager.sdManager.checkpoints[i].model_name == GameManager.sdManager.config.sd_model_checkpoint ||
-                GameManager.sdManager.checkpoints[i].title == GameManager.sdManager.config.sd_model_checkpoint)
+            if (SDManager.Instance.checkpoints[i].model_name == SDManager.Instance.config.sd_model_checkpoint ||
+                SDManager.Instance.checkpoints[i].title == SDManager.Instance.config.sd_model_checkpoint)
             {
                 dropdown.value = i;
-                GameManager.sdManager.CheckpointIndex = i;
+                SDManager.Instance.CheckpointIndex = i;
                 break;
             }
         }

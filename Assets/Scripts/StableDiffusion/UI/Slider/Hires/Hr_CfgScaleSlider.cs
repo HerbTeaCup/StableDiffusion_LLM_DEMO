@@ -8,7 +8,7 @@ public class Hr_CfgScaleSlider : BaseSlider
     public override void OnValueChanged(float value)
     {
         float realValue = (float)System.Math.Round(value,1);
-        GameManager.sdManager.txt2ImageBody.hr_cfg = realValue;
+        SDManager.Instance.txt2ImageBody.hr_cfg = realValue;
 
         if (!inputField.isFocused)
         {

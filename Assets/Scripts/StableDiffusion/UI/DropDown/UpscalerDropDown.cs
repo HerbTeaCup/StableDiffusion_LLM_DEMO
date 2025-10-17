@@ -7,10 +7,10 @@ public class UpscalerDropDown : BaseDropDown<UpscalerModel>
     //DropDown 변경시 인덱스 값 변경
     public override void OnValueChanged(int index)
     {
-        GameManager.sdManager.txt2ImageBody.hr_upscaler =
-            GameManager.sdManager.upscalerModels[index].name;
+        SDManager.Instance.txt2ImageBody.hr_upscaler =
+            SDManager.Instance.upscalerModels[index].name;
 
-        GameManager.sdManager.UpscalerModelIndex = index;
+        SDManager.Instance.UpscalerModelIndex = index;
     }
 
     protected override string GetAPIUrl()
@@ -25,10 +25,10 @@ public class UpscalerDropDown : BaseDropDown<UpscalerModel>
 
     protected override void OnDataApplied(UpscalerModel[] data)
     {
-        GameManager.sdManager.upscalerModels = data;
-        GameManager.sdManager.UpscalerModelIndex = 0;
+        SDManager.Instance.upscalerModels = data;
+        SDManager.Instance.UpscalerModelIndex = 0;
 
-        GameManager.sdManager.txt2ImageBody.hr_upscaler =
-            GameManager.sdManager.upscalerModels[GameManager.sdManager.UpscalerModelIndex].name;
+        SDManager.Instance.txt2ImageBody.hr_upscaler =
+            SDManager.Instance.upscalerModels[SDManager.Instance.UpscalerModelIndex].name;
     }
 }

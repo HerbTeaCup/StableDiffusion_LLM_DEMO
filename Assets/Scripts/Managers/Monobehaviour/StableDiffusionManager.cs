@@ -10,7 +10,7 @@ using static SDsetting;
 using static Communication;
 using System.Threading.Tasks;
 
-public class SDManager : MonoBehaviour, IAsyncElement
+public class SDManager : SingletonManager<SDManager>, IAsyncElement
 {
     //SD Model
     public SDmodel[] checkpoints;
@@ -36,19 +36,19 @@ public class SDManager : MonoBehaviour, IAsyncElement
 
     private void OnEnable()
     {
-        GameManager.asyncManager.asyncElements.Add(this);
+        AsyncManager.Instance.asyncElements.Add(this);
     }
 
     public async Task Init()
     {
         config = await GetRequestAsync<Config>(sDurls.optionAPI, Communication.StalbeDiffusionBasicHeader);
 
-        if (GameManager.sdManager.config.samples_save == false || GameManager.sdManager.config.save_images_add_number == false)
+        if (SDManager.Instance.config.samples_save == false || SDManager.Instance.config.save_images_add_number == false)
         {
-            GameManager.sdManager.config.samples_save = true;
-            GameManager.sdManager.config.save_images_add_number = true;
-            //GameManager.sdManager.config.outdir_img2img_samples
-            await PostRequestAsync<Config>(sDurls.optionAPI, GameManager.sdManager.config);
+            SDManager.Instance.config.samples_save = true;
+            SDManager.Instance.config.save_images_add_number = true;
+            //SDManager.Instance.config.outdir_img2img_samples
+            await PostRequestAsync<Config>(sDurls.optionAPI, SDManager.Instance.config);
         }
     }
 }

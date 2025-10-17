@@ -14,7 +14,7 @@ public abstract class Generate : MonoBehaviour
     {
         //TODO : 임시. 지금 에셋을 못만들어서 임시로 이렇게.
         var result = await GetRequestAsync<SDmodel[]>(sDurls.sd_modelsAPI, Communication.StalbeDiffusionBasicHeader);
-        GameManager.sdManager.checkpoints = result;
+        SDManager.Instance.checkpoints = result;
     }
 
     //img2img는 만약 구현한다면 오버로딩할 거임
@@ -34,10 +34,10 @@ public abstract class Generate : MonoBehaviour
         string targetUrl = sDurls.txt2ImageAPI;
         generating = true;
 
-        if (GameManager.sdManager.checkpoints == null)
+        if (SDManager.Instance.checkpoints == null)
             await ModelListAsync();
-        if (GameManager.sdManager.config == null)
-            GameManager.sdManager.config = await GetRequestAsync<Config>(sDurls.optionAPI, Communication.StalbeDiffusionBasicHeader);
+        if (SDManager.Instance.config == null)
+            SDManager.Instance.config = await GetRequestAsync<Config>(sDurls.optionAPI, Communication.StalbeDiffusionBasicHeader);
 
         ResponseParam.Txt2ImageOutBody json =
             await PostRequestAsync<RequestParams.Txt2ImageInBody, ResponseParam.Txt2ImageOutBody>(targetUrl, txt2ImageBody);
@@ -68,17 +68,17 @@ public abstract class Generate : MonoBehaviour
         string targetUrl = sDurls.txt2ImageAPI;
         generating = true;
 
-        if (GameManager.sdManager.checkpoints == null)
+        if (SDManager.Instance.checkpoints == null)
             await ModelListAsync();
-        if (GameManager.sdManager.config == null)
+        if (SDManager.Instance.config == null)
         {
             HeaderSetting header = new HeaderSetting(HeaderPurpose.Accept, sDurls.nameHeader, sDurls.valueHeader);
 
-            GameManager.sdManager.config = await GetRequestAsync<Config>(sDurls.optionAPI, header);
+            SDManager.Instance.config = await GetRequestAsync<Config>(sDurls.optionAPI, header);
         }
 
         ResponseParam.Txt2ImageOutBody json =
-            await PostRequestAsync<RequestParams.Txt2ImageInBody, ResponseParam.Txt2ImageOutBody>(targetUrl, GameManager.sdManager.txt2ImageBody);
+            await PostRequestAsync<RequestParams.Txt2ImageInBody, ResponseParam.Txt2ImageOutBody>(targetUrl, SDManager.Instance.txt2ImageBody);
 
         if (json == null || json.images == null)
         {

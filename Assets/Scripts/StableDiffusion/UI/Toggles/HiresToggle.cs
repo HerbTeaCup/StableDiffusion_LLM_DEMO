@@ -13,14 +13,14 @@ public class HiresToggle : MonoBehaviour
     {
         toggle = GetComponent<UnityEngine.UI.Toggle>();
 
-        toggle.isOn = GameManager.sdManager.txt2ImageBody.enable_hr;
+        toggle.isOn = SDManager.Instance.txt2ImageBody.enable_hr;
         Init();
         toggle.onValueChanged.AddListener(OnClick);
     }
 
     void OnClick(bool input)
     {
-        GameManager.sdManager.txt2ImageBody.enable_hr = toggle.isOn;
+        SDManager.Instance.txt2ImageBody.enable_hr = toggle.isOn;
 
         if (targetGroup == null)
         {

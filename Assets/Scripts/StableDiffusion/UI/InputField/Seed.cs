@@ -12,11 +12,11 @@ public class Seed : MonoBehaviour
     {
         inputField = GetComponent<TMPro.TMP_InputField>();
 
-        GameManager.sdManager.txt2ImageBody.seed = int.Parse(inputField.text);
+        SDManager.Instance.txt2ImageBody.seed = int.Parse(inputField.text);
     }
 
     public void OnEndEdit(string input)
     {
-        GameManager.sdManager.txt2ImageBody.seed = int.Parse(input);
+        SDManager.Instance.txt2ImageBody.seed = int.Parse(input);
     }
 }

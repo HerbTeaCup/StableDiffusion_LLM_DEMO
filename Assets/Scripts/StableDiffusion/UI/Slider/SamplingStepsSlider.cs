@@ -7,7 +7,7 @@ public class SamplingStepsSlider : BaseSlider
     public override void OnValueChanged(float value)
     {
         int realValue = (int)System.Math.Round(value);
-        GameManager.sdManager.txt2ImageBody.steps = realValue;
+        SDManager.Instance.txt2ImageBody.steps = realValue;
 
         if (!inputField.isFocused)
         {

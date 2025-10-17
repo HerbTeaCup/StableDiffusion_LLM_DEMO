@@ -8,7 +8,7 @@ public class WidthSlider : BaseSlider
     public override void OnValueChanged(float value)
     {
         int realValue = (int)System.Math.Round(value);
-        GameManager.sdManager.txt2ImageBody.width = realValue;
+        SDManager.Instance.txt2ImageBody.width = realValue;
 
         if (!inputField.isFocused)
         {

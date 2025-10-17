@@ -8,7 +8,7 @@ public class DenoisingSlider : BaseSlider
     public override void OnValueChanged(float value)
     {
         float realValue = (float)System.Math.Round(value, 2);
-        GameManager.sdManager.txt2ImageBody.denoising_strength = realValue;
+        SDManager.Instance.txt2ImageBody.denoising_strength = realValue;
 
         if (!inputField.isFocused)
         {

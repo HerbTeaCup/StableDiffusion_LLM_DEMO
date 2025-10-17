@@ -8,7 +8,7 @@ public class Hr_ResizeWidthSlider : BaseSlider
     public override void OnValueChanged(float value)
     {
         int realValue = (int)System.Math.Round(value);
-        GameManager.sdManager.txt2ImageBody.hr_resize_x = realValue;
+        SDManager.Instance.txt2ImageBody.hr_resize_x = realValue;
 
         if (!inputField.isFocused)
         {

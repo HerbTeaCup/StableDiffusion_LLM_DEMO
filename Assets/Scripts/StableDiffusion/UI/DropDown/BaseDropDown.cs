@@ -13,7 +13,7 @@ public abstract class BaseDropDown<TData> : MonoBehaviour, IDropDown
 {
     protected virtual void OnEnable()
     {
-        GameManager.asyncManager.asyncElements.Add(this);
+        AsyncManager.Instance.asyncElements.Add(this);
     }
 
     protected TMP_Dropdown dropdown;
@@ -42,9 +42,9 @@ public abstract class BaseDropDown<TData> : MonoBehaviour, IDropDown
     public virtual async Task Init()
     {
         //설정객체가 모종의 이유로 없다면
-        if (GameManager.sdManager.config == null)
+        if (SDManager.Instance.config == null)
         {
-            GameManager.sdManager.config = await GetRequestAsync<Config>(sDurls.optionAPI, Communication.StalbeDiffusionBasicHeader);
+            SDManager.Instance.config = await GetRequestAsync<Config>(sDurls.optionAPI, Communication.StalbeDiffusionBasicHeader);
         }
 
         if (_refreshing) return;

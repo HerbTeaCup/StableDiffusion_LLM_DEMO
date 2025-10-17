@@ -21,16 +21,16 @@ public class GerateImage : Generate
     public void OnEndEditPropmt(string input)
     {
         //단순히 프로폼트만 수정할 것임.
-        GameManager.sdManager.txt2ImageBody.prompt = input;
+        SDManager.Instance.txt2ImageBody.prompt = input;
     }
     public void OnEndEditNegativePropmt(string input)
     {
         //단순히 프로폼트만 수정할 것임.
-        GameManager.sdManager.txt2ImageBody.negative_prompt = input;
+        SDManager.Instance.txt2ImageBody.negative_prompt = input;
     }
     public void OnClick()
     {
-        if (GameManager.asyncManager.connected == false)
+        if (AsyncManager.Instance.connected == false)
         {
             Debug.LogError("Disconnected from WebUI...");
             return;
@@ -57,8 +57,7 @@ public class GerateImage : Generate
         {
             //원래는 유니티의 Asset폴더에 저장하고 싶었지만
             //빌드 시에 Asset폴더는 패키징 되기 때문에 동적으로 저장할 수가 없음
-            GameManager.fileManager.
-                SaveFileInDateFolder($"{DateTime.Now.ToString("yyyy-MM-dd_HH-m-s")}", imageData);
+            FileManager.SaveFileInDateFolder($"{DateTime.Now.ToString("yyyy-MM-dd_HH-m-s")}", imageData);
         }
         catch (Exception e)
         {
@@ -88,7 +87,7 @@ public class GerateImage : Generate
             $"CFG scale: {response.parameters.cfg_scale}, " +
             $"Seed: {response.parameters.seed}, " +
             $"Size: {texture.width}x{texture.height}, " +
-            $"Model: {GameManager.sdManager.config.sd_model_checkpoint?.ToString() ?? "Unknown"}\n" +
+            $"Model: {SDManager.Instance.config.sd_model_checkpoint?.ToString() ?? "Unknown"}\n" +
             $"Denoising strength: {response.parameters.denoising_strength}, ";
         if (response.parameters.enable_hr)
         {

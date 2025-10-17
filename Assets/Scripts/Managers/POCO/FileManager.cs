@@ -4,7 +4,7 @@ using System.IO;
 using UnityEngine;
 
 
-public class FileManager
+public static class FileManager
 {
     public enum ImageFormat
     {
@@ -15,7 +15,7 @@ public class FileManager
     /// <summary>
     /// 오늘 날짜 기준 폴더를 생성하고 그 경로를 반환
     /// </summary>
-    string GetOrCreateDateFolder()
+    static string GetOrCreateDateFolder()
     {
         string today = System.DateTime.Now.ToString("yyyy-MM-dd");
         string folderPath = Path.Combine(Application.persistentDataPath, today);    //이미지 동적 생성하려면 이 경로밖에 마땅한 곳이 없음
@@ -32,7 +32,7 @@ public class FileManager
     /// <summary>
     /// 파일을 날짜 폴더 안에 생성
     /// </summary>
-    public void SaveFileInDateFolder(string filename, byte[] data, ImageFormat format = ImageFormat.PNG)
+    public static void SaveFileInDateFolder(string filename, byte[] data, ImageFormat format = ImageFormat.PNG)
     {
         switch (format)
         {
