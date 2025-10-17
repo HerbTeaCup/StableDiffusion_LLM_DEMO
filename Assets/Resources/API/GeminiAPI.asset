@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e902714a64d53449af0341481178283, type: 3}
   m_Name: GeminiAPI
   m_EditorClassIdentifier: 
-  apiType: 0
-  headers: []
+  apiType: 2
+  headers:
+  - headerPurpose: 4
+    name: 
+    value: 
   urls: []

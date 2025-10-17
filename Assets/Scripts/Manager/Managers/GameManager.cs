@@ -4,6 +4,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using UnityEngine;
 
+/// <summary>
+/// 게임매니저라 지칭했지만, 그냥 매니저 모아놓는 중간 브릿지입니다
+/// </summary>
 public class GameManager : MonoBehaviour
 {
     //Monobehaviour
@@ -22,12 +25,21 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     private void Awake()
     {
+        if (_instance != null)
+        {
+            Destroy(this.gameObject);
+        }
+    }
+    private void Start()
+    {
         Init();
     }
     static void Init()
     {
         if (_instance != null)
+        {
             return;
+        }
 
         GameObject temp = GameObject.Find("@GameManager");
 

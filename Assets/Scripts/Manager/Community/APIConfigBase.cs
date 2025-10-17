@@ -29,6 +29,12 @@ public struct HeaderSetting
         this.name = name;
         this.value = value;
     }
+    public HeaderSetting(HeaderPurpose purpose, string name)
+    {
+        this.headerPurpose = purpose;
+        this.name = name;
+        value = default;
+    }
 }
 [Serializable]
 public class URLSetting<TEnum> where TEnum : Enum
