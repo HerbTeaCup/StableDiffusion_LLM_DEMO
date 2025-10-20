@@ -15,7 +15,7 @@ public class CommunicationTest : MonoBehaviour
     [SerializeField] TMPro.TMP_Text outputField;
 
     string api = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
-    [SerializeField] string key;
+    string key = APIKeyResister.GeminiKey;
 
     bool isRunning = false;
 

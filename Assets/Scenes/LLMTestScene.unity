@@ -861,7 +861,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputField: {fileID: 491984355}
   outputField: {fileID: 1526358111}
-  key: 
 --- !u!1 &1526358109
 GameObject:
   m_ObjectHideFlags: 0

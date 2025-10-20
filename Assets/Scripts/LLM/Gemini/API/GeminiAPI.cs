@@ -7,8 +7,6 @@ public enum GeminiRequestPurpose
 {
     GenerateContent,
     StreamGeneratedContent,
-    CountTokens,
-    GetModelInfo,
 }
 
 [Serializable]
