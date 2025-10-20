@@ -10,12 +10,14 @@ public enum HeaderPurpose
 
     //Common
     Authorization,
-    ContentType,
     Accept,
 
     //For Gemini
     XGoogleApiKey,
 }
+/// <summary>
+/// Header 설정 구조체(예: Authorization, Accept)
+/// </summary>
 [Serializable]
 public struct HeaderSetting
 {
@@ -34,6 +36,32 @@ public struct HeaderSetting
         this.headerPurpose = purpose;
         this.name = name;
         value = default;
+    }
+}
+public enum ContentType
+{
+    none,
+    Json,
+}
+/// <summary>
+/// Content-Type 설정 클래스
+/// 명시적으로 매개변수로 Content-Type을 지정할 때 사용합니다. = 정적클래스로 할 수 없음
+/// </summary>
+public static class ContentSetting
+{
+    static Dictionary<ContentType, string> _cache = new()
+    {
+        { ContentType.none, string.Empty },
+        { ContentType.Json, "application/json" },
+    };
+
+    public static string GetContentValue(ContentType contentType)
+    {
+        if (_cache.TryGetValue(contentType, out var value))
+        {
+            return value;
+        }
+        return string.Empty;
     }
 }
 [Serializable]
@@ -57,7 +85,10 @@ public abstract class APIConfigBase<TEnum, TUrlSetting> : ScriptableObject where
 
     [Header("API Information")]
     public APIType apiType;
-    
+
+    /// <summary>
+    /// 자주 사용되는 Header 설정들(예: Authorization, Accept)
+    /// </summary>
     [Header("Setting")]
     [SerializeField] protected List<HeaderSetting> headers;
     Dictionary<HeaderPurpose, HeaderSetting> _headerCache = new();

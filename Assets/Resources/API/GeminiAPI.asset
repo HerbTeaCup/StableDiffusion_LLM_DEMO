@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   apiType: 2
   headers:
-  - headerPurpose: 4
+  - headerPurpose: 3
     name: x-goog-api-key
     value: 
   urls:

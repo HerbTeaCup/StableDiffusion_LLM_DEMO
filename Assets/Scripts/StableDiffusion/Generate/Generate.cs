@@ -35,6 +35,7 @@ public abstract class Generate : MonoBehaviour
         }
 
         string targetUrl = urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Txt2Img);
+        HeaderSetting header = urlManager.StableDiffusion.GetHeader(HeaderPurpose.Accept);
         generating = true;
 
         if (ManagerResister.GetManager<SDManager>().checkpoints == null)
@@ -44,7 +45,7 @@ public abstract class Generate : MonoBehaviour
                 = await GetRequestAsync<Config>(urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Options), Communication.StalbeDiffusionBasicHeader);
 
         ResponseParam.Txt2ImageOutBody json =
-            await PostRequestAsync<RequestParams.Txt2ImageInBody, ResponseParam.Txt2ImageOutBody>(targetUrl, txt2ImageBody);
+            await PostRequestAsync<RequestParams.Txt2ImageInBody, ResponseParam.Txt2ImageOutBody>(targetUrl, header, ContentType.Json, txt2ImageBody);
 
         if(json == null || json.images == null)
         {
@@ -70,20 +71,19 @@ public abstract class Generate : MonoBehaviour
         }
 
         string targetUrl = urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Txt2Img);
+        HeaderSetting header = urlManager.StableDiffusion.GetHeader(HeaderPurpose.Accept);
         generating = true;
 
         if (ManagerResister.GetManager<SDManager>().checkpoints == null)
             await ModelListAsync();
         if (ManagerResister.GetManager<SDManager>().config == null)
         {
-            HeaderSetting header = urlManager.StableDiffusion.GetHeader(HeaderPurpose.Accept);
-
             ManagerResister.GetManager<SDManager>().config 
                 = await GetRequestAsync<Config>(urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Options), header);
         }
 
         ResponseParam.Txt2ImageOutBody json =
-            await PostRequestAsync<RequestParams.Txt2ImageInBody, ResponseParam.Txt2ImageOutBody>(targetUrl, ManagerResister.GetManager<SDManager>().txt2ImageBody);
+            await PostRequestAsync<RequestParams.Txt2ImageInBody, ResponseParam.Txt2ImageOutBody>(targetUrl, header, ContentType.Json, ManagerResister.GetManager<SDManager>().txt2ImageBody);
 
         if (json == null || json.images == null)
         {

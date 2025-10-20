@@ -22,8 +22,10 @@ public class ModelDropDown : BaseDropDown<SDmodel>
         dropdown.interactable = false;
 
         ManagerResister.GetManager<SDManager>().config.sd_model_checkpoint = ManagerResister.GetManager<SDManager>().checkpoints[index].model_name;//荐沥窍绊
+        string optionUrl = urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Options);
+        HeaderSetting header= urlManager.StableDiffusion.GetHeader(HeaderPurpose.Accept);
 
-        await Communication.PostRequestAsync<Config>(urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Options), ManagerResister.GetManager<SDManager>().config);//WebUI Config客 鞍霸(老包己)
+        await Communication.PostRequestAsync<Config>(optionUrl, header, ContentType.Json, ManagerResister.GetManager<SDManager>().config);//WebUI Config客 鞍霸(老包己)
 
         Debug.Log($"Select Model: {ManagerResister.GetManager<SDManager>().config.sd_model_checkpoint}");
 

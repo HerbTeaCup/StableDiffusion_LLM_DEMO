@@ -110,7 +110,7 @@ public partial class Communication
     /// <summary>
     /// POST 요청을 비동기적으로 수행하지만, 응답을 반환하지 않습니다.
     /// </summary>
-    public static async Task PostRequestAsync<U>(string targetURL, U postData, [CallerMemberName] string caller = "")
+    public static async Task PostRequestAsync<U>(string targetURL, HeaderSetting header, ContentType content, U postData, [CallerMemberName] string caller = "")
     {
         if (!Uri.IsWellFormedUriString(targetURL, UriKind.Absolute))
         {
@@ -122,11 +122,11 @@ public partial class Communication
             HttpResponseMessage response = null;
             try
             {
-                HeaderSetting setting = _urlManager.StableDiffusion.GetHeader(HeaderPurpose.Accept);
-                request.Headers.Add(setting.name, setting.value);
+                request.Headers.Add(header.name, header.value);
                 string requestBody = JsonConvert.SerializeObject(postData);//post할 데이터를 문자열로 변환
+                string contentValue = ContentSetting.GetContentValue(content);
 
-                request.Content = new StringContent(requestBody, Encoding.UTF8, setting.value);
+                request.Content = new StringContent(requestBody, Encoding.UTF8, contentValue);
 
                 response = await httpClient.SendAsync(request);
                 response.EnsureSuccessStatusCode();
@@ -165,7 +165,7 @@ public partial class Communication
     /// <summary>
     /// POST 요청을 비동기적으로 수행하고, 응답을 반환합니다.
     /// </summary>
-    public static async Task<T> PostRequestAsync<U,T>(string targetURL, U postData, [CallerMemberName] string caller = "")
+    public static async Task<T> PostRequestAsync<U,T>(string targetURL, HeaderSetting header, ContentType content, U postData, [CallerMemberName] string caller = "")
     {
         if (!Uri.IsWellFormedUriString(targetURL, UriKind.Absolute))
         {
@@ -178,11 +178,11 @@ public partial class Communication
 
             try
             {
-                HeaderSetting setting = _urlManager.StableDiffusion.GetHeader(HeaderPurpose.Accept);
-                request.Headers.Add(setting.name, setting.value);
+                request.Headers.Add(header.name, header.value);
                 string requestBody = JsonConvert.SerializeObject(postData);//post할 데이터를 문자열로 변환
+                string contentValue = ContentSetting.GetContentValue(content);
 
-                request.Content = new StringContent(requestBody, Encoding.UTF8, setting.value);
+                request.Content = new StringContent(requestBody, Encoding.UTF8, contentValue);
 
                 response = await httpClient.SendAsync(request);
                 response.EnsureSuccessStatusCode();

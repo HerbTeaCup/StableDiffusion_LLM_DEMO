@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   apiType: 1
   headers:
-  - headerPurpose: 3
-    name: Accept
+  - headerPurpose: 2
+    name: accept
     value: application/json
   urls:
   - purpose: 0

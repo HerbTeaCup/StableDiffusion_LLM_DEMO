@@ -50,7 +50,11 @@ public class SDManager : ManagerBase<SDManager>, IAsyncElement
             this.config.samples_save = true;
             this.config.save_images_add_number = true;
             //ManagerResister.GetManager<SDManager>().config.outdir_img2img_samples
-            await PostRequestAsync<Config>(_urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Options), this.config);
+
+            string optionUrl = _urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Options);
+            HeaderSetting header = _urlManager.StableDiffusion.GetHeader(HeaderPurpose.Accept);
+
+            await PostRequestAsync<Config>(optionUrl, header, ContentType.Json, this.config);
         }
     }
 }

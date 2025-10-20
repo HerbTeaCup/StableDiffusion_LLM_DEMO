@@ -55,31 +55,42 @@ public class CommunicationTest : MonoBehaviour
                 }
             }
         };
-        HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Post, api);
-        HttpResponseMessage response = null;
 
-        try
-        {
-            httpRequest.Headers.Add("x-goog-api-key", $"{key}");
-            httpRequest.Content = new StringContent(JsonConvert.SerializeObject(request), System.Text.Encoding.UTF8, "application/json");
+        UrlManager urlManager = ManagerResister.GetManager<UrlManager>();
 
-            response = await client.SendAsync(httpRequest);
+        HeaderSetting header = urlManager.Gemini.GetHeader(HeaderPurpose.XGoogleApiKey);
+        header.value = key;
 
-            string responseText = await response.Content.ReadAsStringAsync();
+        GeminiResponse geminiResponse =
+            await Communication.PostRequestAsync<GeminiRequest, GeminiResponse>(input, header, ContentType.Json, request);
 
-            Debug.Log("완료");
+        outputField.text = geminiResponse.Candidates[0].Content.Parts[0].Text;
 
-            outputField.text = responseText;
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError(e.Message);
+        //HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Post, api);
+        //HttpResponseMessage response = null;
 
-        }
-        finally
-        {
-            httpRequest.Dispose();
-            response.Dispose();
-        }
+        //try
+        //{
+        //    httpRequest.Headers.Add("x-goog-api-key", $"{key}");
+        //    httpRequest.Content = new StringContent(JsonConvert.SerializeObject(request), System.Text.Encoding.UTF8, "application/json");
+
+        //    response = await client.SendAsync(httpRequest);
+
+        //    string responseText = await response.Content.ReadAsStringAsync();
+
+        //    Debug.Log("완료");
+
+        //    outputField.text = responseText;
+        //}
+        //catch (System.Exception e)
+        //{
+        //    Debug.LogError(e.Message);
+
+        //}
+        //finally
+        //{
+        //    httpRequest.Dispose();
+        //    response.Dispose();
+        //}
     }
 }
