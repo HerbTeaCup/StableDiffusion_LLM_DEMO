@@ -13,7 +13,7 @@ public class LLMManager : ManagerBase<LLMManager>
     GeminiRequest _geminiRequest = new();
     public GeminiRequest GeminiRequest { get { return _geminiRequest; } }
 
-    Content PromptInput(string prompt)
+    Content AddUserPrompt(string prompt)
     {
         Part part = new()
         {
@@ -41,10 +41,20 @@ public class LLMManager : ManagerBase<LLMManager>
         HeaderSetting header = urlManager.Gemini.GetHeader(HeaderPurpose.XGoogleApiKey);
         header.value = APIKeyResister.GeminiKey;
 
-        PromptInput(prompt);
+        Content userContent = AddUserPrompt(prompt);
 
-        GeminiResponse response =
-            await Communication.PostRequestAsync<GeminiRequest, GeminiResponse>(targetUrl, header, ContentType.Json, _geminiRequest);
+        GeminiResponse response = null;
+        try
+        {
+            response
+                = await Communication.PostRequestAsync<GeminiRequest, GeminiResponse>(targetUrl, header, ContentType.Json, _geminiRequest);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Gemini 응답 생성 중 오류: {ex.Message}");
+            _geminiRequest.Contents.Remove(userContent); //실패 시 유저 프롬프트 롤백
+            throw;
+        }
 
         //response객체를 재활용하진 않으니, 매번 Response의 첫번째 후보를 요청에 추가
         _geminiRequest.Contents.Add(response.Candidates[0].Content);
@@ -67,41 +77,41 @@ public class LLMManager : ManagerBase<LLMManager>
         HeaderSetting header = urlManager.Gemini.GetHeader(HeaderPurpose.XGoogleApiKey);
         header.value = APIKeyResister.GeminiKey;
 
-        PromptInput(prompt);
+        Content userContent = AddUserPrompt(prompt);
 
         await foreach (var line in Communication.PostAndStreamLinesAsync(targetUrl, header, ContentType.Json, _geminiRequest))
         {
-            if (string.IsNullOrWhiteSpace(line))
+            if (string.IsNullOrWhiteSpace(line) || !line.StartsWith("data: "))
             {
                 // SSE는 빈 줄을 keep-alive 신호로 보낼 수 있으므로 무시
                 continue;
             }
 
-            if (line.StartsWith("data: "))
+            string jsonText = line.Substring("data: ".Length);
+
+            try
             {
-                string jsonText = line.Substring("data: ".Length);
+                var streamResponse = JsonConvert.DeserializeObject<GeminiResponse>(jsonText);
+                finalResponse = streamResponse; //마지막 메타데이터 저장
 
-                try
+                //텍스트 추출: 실제 텍스트 조각(chunk)을 가져옴
+                string textChunk = streamResponse?.Candidates?[0]?.Content?.Parts?[0]?.Text;
+
+                if (textChunk != null)
                 {
-                    var streamResponse = JsonConvert.DeserializeObject<GeminiResponse>(jsonText);
-                    finalResponse = streamResponse; //마지막 메타데이터 저장
+                    //UI던, 로그던 청크 단위로 넘기기
+                    callback.Invoke(textChunk);
 
-                    //텍스트 추출: 실제 텍스트 조각(chunk)을 가져옴
-                    string textChunk = streamResponse?.Candidates?[0]?.Content?.Parts?[0]?.Text;
-
-                    if (textChunk != null)
-                    {
-                        //UI던, 로그던 청크 단위로 넘기기
-                        callback.Invoke(textChunk);
-
-                        //최종 응답 조립용
-                        fullResponseBuilder.Append(textChunk);
-                    }
+                    //최종 응답 조립용
+                    fullResponseBuilder.Append(textChunk);
                 }
-                catch (JsonException ex)
-                {
-                    Debug.LogWarning($"JSON 역직렬화 실패: {ex.Message} | 원본: {jsonText}");
-                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[StreamingResponse] API 요청 실패: {ex.Message}");
+                //실패 시, 방금 추가한 userContent를 히스토리에서 제거 (롤백)
+                _geminiRequest.Contents.Remove(userContent);
+                throw; // 오류를 상위로 다시 던짐
             }
         }
 
