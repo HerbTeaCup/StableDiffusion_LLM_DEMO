@@ -16,7 +16,7 @@ namespace GeminiLLM
 
         // 사용자와 모델이 주고받은 대화 내용
         [JsonProperty("contents")]
-        public List<Content> Contents { get; set; }
+        public List<Content> Contents { get; set; } = new();
 
         // 생성 옵션 (temperature, maxTokens 등) (선택 사항)
         [JsonProperty("generationConfig", NullValueHandling = NullValueHandling.Ignore)]

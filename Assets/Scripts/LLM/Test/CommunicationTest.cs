@@ -12,9 +12,6 @@ public class CommunicationTest : MonoBehaviour
     [SerializeField] TMPro.TMP_InputField inputField;
     [SerializeField] TMPro.TMP_Text outputField;
 
-    string api = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
-    string key = APIKeyResister.GeminiKey;
-
     bool isRunning = false;
 
     // Start is called before the first frame update
@@ -38,57 +35,10 @@ public class CommunicationTest : MonoBehaviour
     {
         string input = inputField.text;
 
-        Debug.Log("입력중...");
+        LLMManager llmManager = ManagerResister.GetManager<LLMManager>();
 
-        GeminiRequest request = new();
+        var response = await llmManager.GenerateResponse(input);
 
-        request.Contents = new List<Content>
-        {
-            new Content
-            {
-                Role = "user",
-                Parts = new List<Part>
-                {
-                    new Part { Text = input }
-                }
-            }
-        };
-
-        UrlManager urlManager = ManagerResister.GetManager<UrlManager>();
-
-        HeaderSetting header = urlManager.Gemini.GetHeader(HeaderPurpose.XGoogleApiKey);
-        header.value = key;
-
-        GeminiResponse geminiResponse =
-            await Communication.PostRequestAsync<GeminiRequest, GeminiResponse>(api, header, ContentType.Json, request);
-
-        outputField.text = geminiResponse.Candidates[0].Content.Parts[0].Text;
-
-        //HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Post, api);
-        //HttpResponseMessage response = null;
-
-        //try
-        //{
-        //    httpRequest.Headers.Add("x-goog-api-key", $"{key}");
-        //    httpRequest.Content = new StringContent(JsonConvert.SerializeObject(request), System.Text.Encoding.UTF8, "application/json");
-
-        //    response = await client.SendAsync(httpRequest);
-
-        //    string responseText = await response.Content.ReadAsStringAsync();
-
-        //    Debug.Log("완료");
-
-        //    outputField.text = responseText;
-        //}
-        //catch (System.Exception e)
-        //{
-        //    Debug.LogError(e.Message);
-
-        //}
-        //finally
-        //{
-        //    httpRequest.Dispose();
-        //    response.Dispose();
-        //}
+        outputField.text = response.Candidates[0].Content.Parts[0].Text;
     }
 }

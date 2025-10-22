@@ -18,10 +18,10 @@ MonoBehaviour:
     name: x-goog-api-key
     value: 
   urls:
-  - purpose: 0
+  - purpose: 1
     url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent
     description: "\uC2A4\uD2B8\uB9AC\uBC0D \uC5C6\uC774 \uD14D\uC2A4\uD2B8\uB97C
       \uC0DD\uC131"
-  - purpose: 1
+  - purpose: 2
     url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse
     description: "\uC2A4\uD2B8\uB9AC\uBC0D\uC73C\uB85C \uD14D\uC2A4\uD2B8\uB97C \uC0DD\uC131"

@@ -6,6 +6,7 @@ using UnityEngine;
 
 public enum GeminiRequestPurpose
 {
+    None,//None은 사용하지 않음. 기본
     GenerateContent,
     StreamGeneratedContent,
 }
