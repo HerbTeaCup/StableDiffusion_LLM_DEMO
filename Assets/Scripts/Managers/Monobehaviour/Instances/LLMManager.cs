@@ -11,7 +11,6 @@ using UnityEngine;
 public class LLMManager : ManagerBase<LLMManager>
 {
     GeminiRequest _geminiRequest = new();
-    public GeminiRequest GeminiRequest { get { return _geminiRequest; } }
 
     Content AddUserPrompt(string prompt)
     {
@@ -27,6 +26,24 @@ public class LLMManager : ManagerBase<LLMManager>
 
         _geminiRequest.Contents.Add(content);
         return content;
+    }
+
+    /// <summary>
+    /// System Instruction ¼³Á¤
+    /// </summary>
+    public SystemInstruction SystemInstructionSetting(string instruction)
+    {
+        if (_geminiRequest.SystemInstruction == null)
+            _geminiRequest.SystemInstruction = new SystemInstruction();
+
+        Part part = new()
+        {
+            Text = instruction
+        };
+
+        _geminiRequest.SystemInstruction.Parts.Add(part);
+
+        return _geminiRequest.SystemInstruction;
     }
 
     /// <summary>
