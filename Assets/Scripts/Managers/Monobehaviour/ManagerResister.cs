@@ -2,11 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IManager { }
+public interface IManager 
+{
+    /// <summary>
+    /// 낮은 값이 먼저 초기화 됩니다.
+    /// </summary>
+    int Order { get; }
+    /// <summary>
+    /// 매니저가 모두 등록된 후 호출됩니다.
+    /// </summary>
+    void AfterAllManagerInitialized();
+}
 
 public static class ManagerResister
 {
     static Dictionary<System.Type, IManager> _managers = new();
+
+    public static void AddManager(System.Type type, IManager manager)
+    {
+        if(_managers.ContainsKey(type))
+        {
+            Debug.LogWarning($"Manager of type {type} is already registered.");
+            return;
+        }
+        _managers.Add(type, manager);
+    }
 
     public static void AddManager<T>(T manager) where T : IManager
     {

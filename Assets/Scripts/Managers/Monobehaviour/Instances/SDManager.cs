@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 
 public class SDManager : ManagerBase<SDManager>, IAsyncElement
 {
+    public override int Order => 10;
+
     //SD Model
     public SDmodel[] checkpoints;
     public int CheckpointIndex = 0;
@@ -34,11 +36,12 @@ public class SDManager : ManagerBase<SDManager>, IAsyncElement
     public Config config { get; set; } //유령객체 생성 방지 프로퍼티 선언
     public RequestParams.Txt2ImageInBody txt2ImageBody = new RequestParams.Txt2ImageInBody(); //재활용을 위한 txt2ImageBody 객체 생성
 
-    UrlManager _urlManager => ManagerResister.GetManager<UrlManager>();
+    UrlManager _urlManager;
+    AsyncManager _asyncManager;
 
-    private void OnEnable()
+    private void Start()
     {
-        ManagerResister.GetManager<AsyncManager>().asyncElements.Add(this);
+        _asyncManager.AsyncElements.Add(this);
     }
 
     public async Task Init()
@@ -56,5 +59,11 @@ public class SDManager : ManagerBase<SDManager>, IAsyncElement
 
             await PostRequestAsync<Config>(optionUrl, header, ContentType.Json, this.config);
         }
+    }
+
+    public override void AfterAllManagerInitialized()
+    {
+        _urlManager = ManagerResister.GetManager<UrlManager>();
+        _asyncManager = ManagerResister.GetManager<AsyncManager>();
     }
 }

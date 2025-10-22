@@ -11,9 +11,9 @@ using static Communication;
 //제네릭으로 선언해서 어떤 타입으로 파싱할 건지 자식 클래스에서 지정할 수 있게
 public abstract class BaseDropDown<TData> : MonoBehaviour, IDropDown
 {
-    protected virtual void OnEnable()
+    protected virtual void Start()
     {
-        ManagerResister.GetManager<AsyncManager>().asyncElements.Add(this);
+        ManagerResister.GetManager<AsyncManager>().AsyncElements.Add(this);
     }
 
     protected TMP_Dropdown dropdown;

@@ -9,8 +9,6 @@ using UnityEngine.UI;
 
 public class CommunicationTest : MonoBehaviour
 {
-    static HttpClient client = new HttpClient();
-
     [SerializeField] TMPro.TMP_InputField inputField;
     [SerializeField] TMPro.TMP_Text outputField;
 
@@ -62,7 +60,7 @@ public class CommunicationTest : MonoBehaviour
         header.value = key;
 
         GeminiResponse geminiResponse =
-            await Communication.PostRequestAsync<GeminiRequest, GeminiResponse>(input, header, ContentType.Json, request);
+            await Communication.PostRequestAsync<GeminiRequest, GeminiResponse>(api, header, ContentType.Json, request);
 
         outputField.text = geminiResponse.Candidates[0].Content.Parts[0].Text;
 

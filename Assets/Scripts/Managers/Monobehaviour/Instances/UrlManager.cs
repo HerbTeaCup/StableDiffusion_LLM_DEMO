@@ -10,9 +10,4 @@ public class UrlManager : ManagerBase<UrlManager>
 
     public APIConfigBase<GeminiRequestPurpose, URLSettingForGemini> Gemini => gemini;
     public APIConfigBase<StableDiffusionRequestPurpose, URLSettingForStableDiffusion> StableDiffusion => stableDiffusion;
-
-    private void Start()
-    {
-        DontDestroyOnLoad(this);
-    }
 }

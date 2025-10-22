@@ -6,9 +6,9 @@ public class ScheduleDropDown : BaseDropDown<SDscheduler>, IAsyncElementWithPrio
 {
     public int Priority => 2;
 
-    protected override void OnEnable()
+    protected override void Start()
     {
-        ManagerResister.GetManager<AsyncManager>().dependentAsyncs.Add(this);
+        ManagerResister.GetManager<AsyncManager>().DependentAsyncs.Add(this);
     }
 
     /// <summary>

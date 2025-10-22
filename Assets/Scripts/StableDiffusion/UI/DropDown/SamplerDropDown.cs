@@ -6,9 +6,9 @@ public class SamplerDropDown : BaseDropDown<SDsampler>, IAsyncElementWithPriorit
 {
     public int Priority => 1;
 
-    protected override void OnEnable()
+    protected override void Start()
     {
-        ManagerResister.GetManager<AsyncManager>().dependentAsyncs.Add(this);
+        ManagerResister.GetManager<AsyncManager>().DependentAsyncs.Add(this);
     }
 
     /// <summary>
