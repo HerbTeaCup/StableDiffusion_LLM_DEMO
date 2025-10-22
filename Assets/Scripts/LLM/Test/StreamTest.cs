@@ -37,7 +37,7 @@ public class StreamTest : MonoBehaviour
 
         StringBuilder fullResponse = new();
 
-        GeminiRequest request = new GeminiRequest();
+        GeminiRequest request = new();
         request.Contents = new List<Content>
         {
             new Content
@@ -85,7 +85,8 @@ public class StreamTest : MonoBehaviour
                     Debug.LogWarning($"JSON 역직렬화 실패: {ex.Message} | 원본: {jsonText}");
                 }
             }
+
+            Debug.Log("전체 응답: " + fullResponse.ToString());
         }
-        Debug.Log("전체 응답: " + fullResponse.ToString());
     }
 }

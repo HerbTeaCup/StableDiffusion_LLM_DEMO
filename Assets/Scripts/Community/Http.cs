@@ -56,7 +56,7 @@ public partial class Communication
     /// <typeparam name="T">반환 받을 타입을 명시합니다</typeparam>
     public static async Task<T> GetRequestAsync<T>(string targetURL, HeaderSetting header, [CallerMemberName] string caller = "")
     {
-        using(HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, targetURL))
+        using(HttpRequestMessage request = new(HttpMethod.Get, targetURL))
         {
             HttpResponseMessage response = null;
             try
@@ -109,7 +109,7 @@ public partial class Communication
     /// </summary>
     public static async Task PostRequestAsync<U>(string targetURL, HeaderSetting header, ContentType content, U postData, [CallerMemberName] string caller = "")
     {
-        using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, targetURL))
+        using (HttpRequestMessage request = new(HttpMethod.Post, targetURL))
         {
             HttpResponseMessage response = null;
             try
@@ -157,9 +157,12 @@ public partial class Communication
     /// <summary>
     /// POST 요청을 비동기적으로 수행하고, 응답을 반환합니다.
     /// </summary>
+    /// <typeparam name="U">입력 타입</typeparam>
+    /// <typeparam name="T">반환 타입</typeparam>
+    /// <returns></returns>
     public static async Task<T> PostRequestAsync<U,T>(string targetURL, HeaderSetting header, ContentType content, U postData, [CallerMemberName] string caller = "")
     {
-        using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, targetURL))
+        using (HttpRequestMessage request = new(HttpMethod.Post, targetURL))
         {
             HttpResponseMessage response = null;
 
@@ -215,7 +218,7 @@ public partial class Communication
     [CallerMemberName] string caller = "",
     [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, targetURL);
+        using HttpRequestMessage request = new(HttpMethod.Post, targetURL);
         HttpResponseMessage response = null;
 
         Stream responseStream = null;

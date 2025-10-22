@@ -40,7 +40,7 @@ public class CommunicationTest : MonoBehaviour
 
         Debug.Log("ÀÔ·ÂÁß...");
 
-        GeminiRequest request = new GeminiRequest();
+        GeminiRequest request = new();
 
         request.Contents = new List<Content>
         {
