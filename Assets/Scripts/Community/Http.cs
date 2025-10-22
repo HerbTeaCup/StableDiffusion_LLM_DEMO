@@ -2,12 +2,14 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
-using System.Runtime.CompilerServices;
 
 /// <summary>
 /// 통신을 담당하는 클래스. 통신할 URL과 통신할 수 있는 메소드를 제공합니다.
@@ -15,10 +17,10 @@ using System.Runtime.CompilerServices;
 /// </summary>
 public partial class Communication
 {
-    static readonly HttpClient httpClient = new HttpClient();
+    static readonly HttpClient httpClient = new();
 
     //TODO:해당 참조 전부 없애고 APIConfigBase의 헤더로 교체
-    static HeaderSetting stableDiffusionBasicHeader = new HeaderSetting(HeaderPurpose.Accept, "Accept", "application/json");
+    static HeaderSetting stableDiffusionBasicHeader = new(HeaderPurpose.Accept, "Accept", "application/json");
     public static HeaderSetting StalbeDiffusionBasicHeader => stableDiffusionBasicHeader; //임시로 사용하는 것.
 
     static UrlManager _urlManager => ManagerResister.GetManager<UrlManager>();
@@ -54,11 +56,6 @@ public partial class Communication
     /// <typeparam name="T">반환 받을 타입을 명시합니다</typeparam>
     public static async Task<T> GetRequestAsync<T>(string targetURL, HeaderSetting header, [CallerMemberName] string caller = "")
     {
-        if (!Uri.IsWellFormedUriString(targetURL, UriKind.Absolute))
-        {
-            targetURL = targetURL.TrimEnd('/') + "/" + targetURL.TrimStart('/');
-        }
-
         using(HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, targetURL))
         {
             HttpResponseMessage response = null;
@@ -112,11 +109,6 @@ public partial class Communication
     /// </summary>
     public static async Task PostRequestAsync<U>(string targetURL, HeaderSetting header, ContentType content, U postData, [CallerMemberName] string caller = "")
     {
-        if (!Uri.IsWellFormedUriString(targetURL, UriKind.Absolute))
-        {
-            targetURL = targetURL.TrimEnd('/') + "/" + targetURL.TrimStart('/');
-        }
-
         using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, targetURL))
         {
             HttpResponseMessage response = null;
@@ -167,11 +159,6 @@ public partial class Communication
     /// </summary>
     public static async Task<T> PostRequestAsync<U,T>(string targetURL, HeaderSetting header, ContentType content, U postData, [CallerMemberName] string caller = "")
     {
-        if (!Uri.IsWellFormedUriString(targetURL, UriKind.Absolute))
-        {
-            targetURL = targetURL.TrimEnd('/') + "/" + targetURL.TrimStart('/');
-        }
-
         using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, targetURL))
         {
             HttpResponseMessage response = null;
@@ -220,6 +207,82 @@ public partial class Communication
             {
                 response?.Dispose();
             }
+        }
+    }
+
+    // [권장] 비동기 스트림은 CancellationToken을 지원하는 것이 좋습니다.
+    public static async IAsyncEnumerable<string> PostAndStreamLinesAsync<U>(string targetURL, HeaderSetting header, ContentType content, U postData,
+    [CallerMemberName] string caller = "",
+    [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, targetURL);
+        HttpResponseMessage response = null;
+
+        Stream responseStream = null;
+        StreamReader streamReader = null;
+
+        try
+        {
+            request.Headers.Add(header.name, header.value);
+            string requestBody = JsonConvert.SerializeObject(postData);//post할 데이터를 문자열로 변환
+            string contentValue = ContentSetting.GetContentValue(content);
+
+            request.Content = new StringContent(requestBody, Encoding.UTF8, contentValue);
+
+            response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            response.EnsureSuccessStatusCode();
+
+            responseStream = await response.Content.ReadAsStreamAsync();
+            streamReader = new StreamReader(responseStream);
+        }
+        catch (HttpRequestException ex)
+        {
+            Debug.LogError($"{caller}에서 [HTTP ERROR] 요청 실패: {ex.Message}");
+            response?.Dispose();
+            throw;
+        }
+        catch (JsonSerializationException ex)
+        {
+            Debug.LogError($"{caller}에서 [JSON 직렬화 실패] {ex.Message}");
+            response?.Dispose();
+            throw;
+        }
+        catch (JsonReaderException ex)
+        {
+            Debug.LogError($"{caller}에서 [JSON 파싱 실패] {ex.Message}");
+            response?.Dispose();
+            throw;
+        }
+        catch (TaskCanceledException ex)
+        {
+            Debug.LogError($"{caller}에서 [TIMEOUT] 요청 시간 초과: {ex.Message}");
+            response?.Dispose();
+            throw;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"{caller}에서 [기타 예외] {ex.GetType().Name}: {ex.Message}");
+            response?.Dispose();
+            throw;
+        }
+
+        try
+        {
+            while (!streamReader.EndOfStream)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                var line = await streamReader.ReadLineAsync();
+                if (line != null)
+                {
+                    yield return line;
+                }
+            }
+        }
+        finally
+        {
+            response?.Dispose();
+            streamReader?.Dispose();
+            responseStream?.Dispose();
         }
     }
 

@@ -36,6 +36,7 @@ public class AsyncManager : ManagerBase<AsyncManager>
     IEnumerator WaitNull()
     {
         yield return null;
+        
     }
 
     //버튼으로만 불러올 메소드  
