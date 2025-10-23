@@ -14,9 +14,10 @@ public abstract class Generate : MonoBehaviour
 
     public async Task ModelListAsync()
     {
-        //TODO : 임시. 지금 에셋을 못만들어서 임시로 이렇게.
-        var result = await GetRequestAsync<SDmodel[]>
-            (urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.SDModels), Communication.StalbeDiffusionBasicHeader);
+        string url = urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.SDModels);
+        HeaderSetting header = urlManager.StableDiffusion.GetHeader(HeaderPurpose.Accept);
+
+        var result = await GetRequestAsync<SDmodel[]>(url, header);
         ManagerResister.GetManager<SDManager>().checkpoints = result;
     }
 
@@ -42,7 +43,7 @@ public abstract class Generate : MonoBehaviour
             await ModelListAsync();
         if (ManagerResister.GetManager<SDManager>().config == null)
             ManagerResister.GetManager<SDManager>().config 
-                = await GetRequestAsync<Config>(urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Options), Communication.StalbeDiffusionBasicHeader);
+                = await GetRequestAsync<Config>(urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Options), header);
 
         ResponseParam.Txt2ImageOutBody json =
             await PostRequestAsync<RequestParams.Txt2ImageInBody, ResponseParam.Txt2ImageOutBody>(targetUrl, header, ContentType.Json, txt2ImageBody);

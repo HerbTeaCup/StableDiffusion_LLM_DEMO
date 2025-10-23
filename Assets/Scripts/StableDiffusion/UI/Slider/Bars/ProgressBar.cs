@@ -60,7 +60,11 @@ public class ProgressBar : MonoBehaviour
 
     async Task<SDsetting.SDProgress> GetProgressValue()
     {
-        return await Communication.GetRequestAsync<SDsetting.SDProgress>(ManagerResister.
-            GetManager<UrlManager>().StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Progress), Communication.StalbeDiffusionBasicHeader);
+        UrlManager urlManager = ManagerResister.GetManager<UrlManager>();
+
+        string url = urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Progress);
+        HeaderSetting header = urlManager.StableDiffusion.GetHeader(HeaderPurpose.Accept);
+
+        return await Communication.GetRequestAsync<SDsetting.SDProgress>(url, header);
     }
 }

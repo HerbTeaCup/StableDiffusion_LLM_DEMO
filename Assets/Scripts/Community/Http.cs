@@ -8,7 +8,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -16,13 +15,9 @@ using UnityEngine.Networking;
 /// 통신을 담당하는 클래스. 통신할 URL과 통신할 수 있는 메소드를 제공합니다.
 /// 모든 서버와의 통신은 이 클래스를 통해 통신.
 /// </summary>
-public partial class Communication
+public static class Communication
 {
     static readonly HttpClient httpClient = new();
-
-    //TODO:해당 참조 전부 없애고 APIConfigBase의 헤더로 교체
-    static HeaderSetting stableDiffusionBasicHeader = new(HeaderPurpose.Accept, "Accept", "application/json");
-    public static HeaderSetting StalbeDiffusionBasicHeader => stableDiffusionBasicHeader; //임시로 사용하는 것.
 
     static UrlManager _urlManager => ManagerResister.GetManager<UrlManager>();
 

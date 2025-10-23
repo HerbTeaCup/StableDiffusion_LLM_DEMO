@@ -46,8 +46,11 @@ public abstract class BaseDropDown<TData> : MonoBehaviour, IDropDown
         //설정객체가 모종의 이유로 없다면
         if (ManagerResister.GetManager<SDManager>().config == null)
         {
+            string url = urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Options);
+            HeaderSetting header = urlManager.StableDiffusion.GetHeader(HeaderPurpose.Accept);
+
             ManagerResister.GetManager<SDManager>().config 
-                = await GetRequestAsync<Config>(urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Options), Communication.StalbeDiffusionBasicHeader);
+                = await GetRequestAsync<Config>(url, header);
         }
 
         if (_refreshing) return;
@@ -59,8 +62,10 @@ public abstract class BaseDropDown<TData> : MonoBehaviour, IDropDown
 
         try
         {
+            HeaderSetting header = urlManager.StableDiffusion.GetHeader(HeaderPurpose.Accept);
+
             //자식클래스에서 정의한 TData타입으로 역직렬화 반환
-            dataList = await GetRequestAsync<TData[]>(GetAPIUrl(), StalbeDiffusionBasicHeader);
+            dataList = await GetRequestAsync<TData[]>(GetAPIUrl(), header);
         }
         catch(System.Exception e)
         {

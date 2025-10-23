@@ -34,7 +34,7 @@ public class SDManager : ManagerBase<SDManager>, IAsyncElement
     /// 이 값은 너무 중요함. 변경시에 반드시 다시 서버의 값을 다시 받아올것.
     /// </summary>
     public Config config { get; set; } //유령객체 생성 방지 프로퍼티 선언
-    public RequestParams.Txt2ImageInBody txt2ImageBody = new RequestParams.Txt2ImageInBody(); //재활용을 위한 txt2ImageBody 객체 생성
+    public RequestParams.Txt2ImageInBody txt2ImageBody = new(); //재활용을 위한 txt2ImageBody 객체 생성
 
     UrlManager _urlManager;
     AsyncManager _asyncManager;
@@ -46,16 +46,16 @@ public class SDManager : ManagerBase<SDManager>, IAsyncElement
 
     public async Task Init()
     {
-        config = await GetRequestAsync<Config>(_urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Options), Communication.StalbeDiffusionBasicHeader);
+        string optionUrl = _urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Options);
+        HeaderSetting header = _urlManager.StableDiffusion.GetHeader(HeaderPurpose.Accept);
+
+        config = await GetRequestAsync<Config>(optionUrl, header);
 
         if (this.config.samples_save == false || ManagerResister.GetManager<SDManager>().config.save_images_add_number == false)
         {
             this.config.samples_save = true;
             this.config.save_images_add_number = true;
             //ManagerResister.GetManager<SDManager>().config.outdir_img2img_samples
-
-            string optionUrl = _urlManager.StableDiffusion.GetUrl(StableDiffusionRequestPurpose.Options);
-            HeaderSetting header = _urlManager.StableDiffusion.GetHeader(HeaderPurpose.Accept);
 
             await PostRequestAsync<Config>(optionUrl, header, ContentType.Json, this.config);
         }
