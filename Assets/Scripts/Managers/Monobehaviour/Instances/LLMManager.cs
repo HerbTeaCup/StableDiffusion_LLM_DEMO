@@ -8,9 +8,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
+//지금은 Gemini 전용 매니저
+//향후 다른 LLM을 추가한다면, LLMManager를 상속받아 구현
 public class LLMManager : ManagerBase<LLMManager>
 {
-    GeminiRequest _geminiRequest = new();
+    readonly GeminiRequest _geminiRequest = new();
 
     Content AddUserPrompt(string prompt)
     {
@@ -56,11 +58,10 @@ public class LLMManager : ManagerBase<LLMManager>
         string targetUrl = urlManager.Gemini.GetUrl(GeminiRequestPurpose.GenerateContent);
 
         HeaderSetting header = urlManager.Gemini.GetHeader(HeaderPurpose.XGoogleApiKey);
-        header.value = APIKeyResister.GeminiKey;
 
         Content userContent = AddUserPrompt(prompt);
 
-        GeminiResponse response = null;
+        GeminiResponse response;
         try
         {
             response
@@ -92,7 +93,6 @@ public class LLMManager : ManagerBase<LLMManager>
         string targetUrl = urlManager.Gemini.GetUrl(GeminiRequestPurpose.StreamGeneratedContent);
 
         HeaderSetting header = urlManager.Gemini.GetHeader(HeaderPurpose.XGoogleApiKey);
-        header.value = APIKeyResister.GeminiKey;
 
         Content userContent = AddUserPrompt(prompt);
 
@@ -138,7 +138,7 @@ public class LLMManager : ManagerBase<LLMManager>
             var modelContent = new Content
             {
                 Role = "model",
-                Parts = new List<Part> { new Part { Text = fullResponseBuilder.ToString() } }
+                Parts = new List<Part> { new() { Text = fullResponseBuilder.ToString() } }
             };
             _geminiRequest.Contents.Add(modelContent);
         }

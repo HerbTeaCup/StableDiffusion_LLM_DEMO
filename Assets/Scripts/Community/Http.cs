@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -56,51 +57,50 @@ public partial class Communication
     /// <typeparam name="T">반환 받을 타입을 명시합니다</typeparam>
     public static async Task<T> GetRequestAsync<T>(string targetURL, HeaderSetting header, [CallerMemberName] string caller = "")
     {
-        using(HttpRequestMessage request = new(HttpMethod.Get, targetURL))
+        HttpRequestMessage request = new(HttpMethod.Get, targetURL);
+        HttpResponseMessage response = null;
+        try
         {
-            HttpResponseMessage response = null;
-            try
-            {
-                request.Headers.Add(header.name, header.value);
+            request.Headers.Add(header.name, header.value);
 
-                response = await httpClient.SendAsync(request);
-                response.EnsureSuccessStatusCode();
+            response = await httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
 
-                string result = await response.Content.ReadAsStringAsync();
+            string result = await response.Content.ReadAsStringAsync();
 
-                T Data = JsonConvert.DeserializeObject<T>(result);
+            T Data = JsonConvert.DeserializeObject<T>(result);
 
-                return Data;
-            }
-            catch (HttpRequestException ex)
-            {
-                Debug.LogError($"{caller}에서 [HTTP ERROR] 요청 실패: {ex.Message}");
-                throw;
-            }
-            catch (JsonSerializationException ex)
-            {
-                Debug.LogError($"{caller}에서 [JSON 직렬화 실패] {ex.Message}");
-                throw;
-            }
-            catch (JsonReaderException ex)
-            {
-                Debug.LogError($"{caller}에서 [JSON 파싱 실패] {ex.Message}");
-                throw;
-            }
-            catch (TaskCanceledException ex)
-            {
-                Debug.LogError($"{caller}에서 [TIMEOUT] 요청 시간 초과: {ex.Message}");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"{caller}에서 [기타 예외] {ex.GetType().Name}: {ex.Message}");
-                throw;
-            }
-            finally
-            {
-                response?.Dispose(); // 응답 객체를 해제합니다.
-            }
+            return Data;
+        }
+        catch (HttpRequestException ex)
+        {
+            Debug.LogError($"{caller}에서 [HTTP ERROR] 요청 실패: {ex.Message}");
+            throw;
+        }
+        catch (JsonSerializationException ex)
+        {
+            Debug.LogError($"{caller}에서 [JSON 직렬화 실패] {ex.Message}");
+            throw;
+        }
+        catch (JsonReaderException ex)
+        {
+            Debug.LogError($"{caller}에서 [JSON 파싱 실패] {ex.Message}");
+            throw;
+        }
+        catch (TaskCanceledException ex)
+        {
+            Debug.LogError($"{caller}에서 [TIMEOUT] 요청 시간 초과: {ex.Message}");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"{caller}에서 [기타 예외] {ex.GetType().Name}: {ex.Message}");
+            throw;
+        }
+        finally
+        {
+            request.Dispose(); // 요청 객체를 해제합니다.
+            response?.Dispose(); // 응답 객체를 해제합니다.
         }
     }
 
@@ -109,49 +109,48 @@ public partial class Communication
     /// </summary>
     public static async Task PostRequestAsync<U>(string targetURL, HeaderSetting header, ContentType content, U postData, [CallerMemberName] string caller = "")
     {
-        using (HttpRequestMessage request = new(HttpMethod.Post, targetURL))
+        HttpRequestMessage request = new(HttpMethod.Post, targetURL);
+        HttpResponseMessage response = null;
+        try
         {
-            HttpResponseMessage response = null;
-            try
-            {
-                request.Headers.Add(header.name, header.value);
-                string requestBody = JsonConvert.SerializeObject(postData);//post할 데이터를 문자열로 변환
-                string contentValue = ContentSetting.GetContentValue(content);
+            request.Headers.Add(header.name, header.value);
+            string requestBody = JsonConvert.SerializeObject(postData);//post할 데이터를 문자열로 변환
+            string contentValue = ContentSetting.GetContentValue(content);
 
-                request.Content = new StringContent(requestBody, Encoding.UTF8, contentValue);
+            request.Content = new StringContent(requestBody, Encoding.UTF8, contentValue);
 
-                response = await httpClient.SendAsync(request);
-                response.EnsureSuccessStatusCode();
-            }
-            catch (HttpRequestException ex)
-            {
-                Debug.LogError($"{caller}에서 [HTTP ERROR] 요청 실패: {ex.Message}");
-                throw;
-            }
-            catch (JsonSerializationException ex)
-            {
-                Debug.LogError($"{caller}에서 [JSON 직렬화 실패] {ex.Message}");
-                throw;
-            }
-            catch (JsonReaderException ex)
-            {
-                Debug.LogError($"{caller}에서 [JSON 파싱 실패] {ex.Message}");
-                throw;
-            }
-            catch (TaskCanceledException ex)
-            {
-                Debug.LogError($"{caller}에서 [TIMEOUT] 요청 시간 초과: {ex.Message}");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"{caller}에서 [기타 예외] {ex.GetType().Name}: {ex.Message}");
-                throw;
-            }
-            finally
-            {
-                response?.Dispose();
-            }
+            response = await httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+        }
+        catch (HttpRequestException ex)
+        {
+            Debug.LogError($"{caller}에서 [HTTP ERROR] 요청 실패: {ex.Message}");
+            throw;
+        }
+        catch (JsonSerializationException ex)
+        {
+            Debug.LogError($"{caller}에서 [JSON 직렬화 실패] {ex.Message}");
+            throw;
+        }
+        catch (JsonReaderException ex)
+        {
+            Debug.LogError($"{caller}에서 [JSON 파싱 실패] {ex.Message}");
+            throw;
+        }
+        catch (TaskCanceledException ex)
+        {
+            Debug.LogError($"{caller}에서 [TIMEOUT] 요청 시간 초과: {ex.Message}");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"{caller}에서 [기타 예외] {ex.GetType().Name}: {ex.Message}");
+            throw;
+        }
+        finally
+        {
+            request?.Dispose();
+            response?.Dispose();
         }
     }
     /// <summary>
@@ -162,54 +161,53 @@ public partial class Communication
     /// <returns></returns>
     public static async Task<T> PostRequestAsync<U,T>(string targetURL, HeaderSetting header, ContentType content, U postData, [CallerMemberName] string caller = "")
     {
-        using (HttpRequestMessage request = new(HttpMethod.Post, targetURL))
+        HttpRequestMessage request = new(HttpMethod.Post, targetURL);
+        HttpResponseMessage response = null;
+
+        try
         {
-            HttpResponseMessage response = null;
+            request.Headers.Add(header.name, header.value);
+            string requestBody = JsonConvert.SerializeObject(postData);//post할 데이터를 문자열로 변환
+            string contentValue = ContentSetting.GetContentValue(content);
 
-            try
-            {
-                request.Headers.Add(header.name, header.value);
-                string requestBody = JsonConvert.SerializeObject(postData);//post할 데이터를 문자열로 변환
-                string contentValue = ContentSetting.GetContentValue(content);
+            request.Content = new StringContent(requestBody, Encoding.UTF8, contentValue);
 
-                request.Content = new StringContent(requestBody, Encoding.UTF8, contentValue);
+            response = await httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
 
-                response = await httpClient.SendAsync(request);
-                response.EnsureSuccessStatusCode();
+            string responseText = await response.Content.ReadAsStringAsync();
 
-                string responseText = await response.Content.ReadAsStringAsync();
-
-                return JsonConvert.DeserializeObject<T>(responseText);
-            }
-            catch (HttpRequestException ex)
-            {
-                Debug.LogError($"{caller}에서 [HTTP ERROR] 요청 실패: {ex.Message}");
-                throw;
-            }
-            catch (JsonSerializationException ex)
-            {
-                Debug.LogError($"{caller}에서 [JSON 직렬화 실패] {ex.Message}");
-                throw;
-            }
-            catch (JsonReaderException ex)
-            {
-                Debug.LogError($"{caller}에서 [JSON 파싱 실패] {ex.Message}");
-                throw;
-            }
-            catch (TaskCanceledException ex)
-            {
-                Debug.LogError($"{caller}에서 [TIMEOUT] 요청 시간 초과: {ex.Message}");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"{caller}에서 [기타 예외] {ex.GetType().Name}: {ex.Message}");
-                throw;
-            }
-            finally
-            {
-                response?.Dispose();
-            }
+            return JsonConvert.DeserializeObject<T>(responseText);
+        }
+        catch (HttpRequestException ex)
+        {
+            Debug.LogError($"{caller}에서 [HTTP ERROR] 요청 실패: {ex.Message}");
+            throw;
+        }
+        catch (JsonSerializationException ex)
+        {
+            Debug.LogError($"{caller}에서 [JSON 직렬화 실패] {ex.Message}");
+            throw;
+        }
+        catch (JsonReaderException ex)
+        {
+            Debug.LogError($"{caller}에서 [JSON 파싱 실패] {ex.Message}");
+            throw;
+        }
+        catch (TaskCanceledException ex)
+        {
+            Debug.LogError($"{caller}에서 [TIMEOUT] 요청 시간 초과: {ex.Message}");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"{caller}에서 [기타 예외] {ex.GetType().Name}: {ex.Message}");
+            throw;
+        }
+        finally
+        {
+            request?.Dispose();
+            response?.Dispose();
         }
     }
 

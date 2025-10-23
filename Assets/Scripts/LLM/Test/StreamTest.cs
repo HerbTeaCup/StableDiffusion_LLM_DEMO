@@ -11,12 +11,6 @@ public class StreamTest : MonoBehaviour
     [SerializeField] TMPro.TMP_InputField inputField;
     [SerializeField] TMPro.TMP_Text outputField;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -45,7 +39,7 @@ public class StreamTest : MonoBehaviour
                 Role = "user",
                 Parts = new List<Part>
                 {
-                    new Part { Text = input }
+                    new() { Text = input }
                 }
             }
         };

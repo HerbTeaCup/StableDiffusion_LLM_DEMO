@@ -49,7 +49,7 @@ public enum ContentType
 /// </summary>
 public static class ContentSetting
 {
-    static Dictionary<ContentType, string> _cache = new()
+    readonly static Dictionary<ContentType, string> _cache = new()
     {
         { ContentType.none, string.Empty },
         { ContentType.Json, "application/json" },
@@ -91,12 +91,12 @@ public abstract class APIConfigBase<TEnum, TUrlSetting> : ScriptableObject where
     /// </summary>
     [Header("Setting")]
     [SerializeField] protected List<HeaderSetting> headers;
-    Dictionary<HeaderPurpose, HeaderSetting> _headerCache = new();
+    protected Dictionary<HeaderPurpose, HeaderSetting> _headerCache = new();
 
     protected abstract List<TUrlSetting> Urls { get; }
-    Dictionary<TEnum, TUrlSetting> _urlCache = new();
+    readonly Dictionary<TEnum, TUrlSetting> _urlCache = new();
 
-    public HeaderSetting GetHeader(HeaderPurpose purpose)
+    public virtual HeaderSetting GetHeader(HeaderPurpose purpose)
     {
         if(purpose == HeaderPurpose.none)
         {
